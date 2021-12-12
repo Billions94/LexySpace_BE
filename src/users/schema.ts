@@ -10,7 +10,7 @@ const LoggedInUserSchema = new Schema<LoggedInUser>({
     email: { type: String, required: true },
     password: { type: String, required: true },
     bio: { type: String },
-    image: { type: String }
+    image: { type: String },
 },
     {
         timestamps: true
