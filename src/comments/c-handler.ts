@@ -86,11 +86,11 @@ const updateComment = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 // GET comment by ID
-
 const getCommentById = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const id = req.params.commentId
         const comment = await CommentModel.findById(id)
+        .populate({ path: 'replies'})
         if (comment) {
             res.status(200).send(comment)
         } else {
@@ -103,7 +103,6 @@ const getCommentById = async(req: Request, res: Response, next: NextFunction) =>
 
 
 // DELETE comment
-
 const deleteComment = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const comment = await CommentModel.findByIdAndDelete(req.params.commentId)
