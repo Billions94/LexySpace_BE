@@ -1,12 +1,11 @@
 
 import CommentModel from './schema'
 import PostModel from '../blogPost/schema'
-import { Request, Response, NextFunction } from 'express'
-const createHttpError = require('http-errors')
+import { Request, Response } from 'express'
 const q2m = require('query-to-mongo')
 
 // Create new Comment
-const createComment = async (req: Request, res: Response, next: NextFunction) => {
+const createComment = async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         
@@ -23,16 +22,15 @@ const createComment = async (req: Request, res: Response, next: NextFunction) =>
             )
             res.status(201).send(updatedPost)
         } else {
-            next(createHttpError(404, `Experience with id ${id} not found`))  
+            res.status(404).send(`Comment with id ${id} not found`) 
         }
     } catch (error) {
        console.error(error) 
-       next(error)
     }
 }
 
 // Get all Comments
-const getAllComments = async (req: Request, res: Response, next: NextFunction) => {
+const getAllComments = async (req: Request, res: Response) => {
     try {
         const mongoQuery = q2m(req.query)
         console.log(mongoQuery)
@@ -53,16 +51,15 @@ const getAllComments = async (req: Request, res: Response, next: NextFunction) =
                 comments
             })
         } else {
-            next(createHttpError(404,`Comment with id ${req.params.commentsId} not found!`))
+            res.status(404).send(`Comment with id ${req.params.id} not found`)
         }
     } catch (error) {
         console.error(error)
-        next(error)
     }
 }
 
 // Update the Comment
-const updateComment = async (req: Request, res: Response, next: NextFunction) => {
+const updateComment = async (req: Request, res: Response) => {
  try {
     //  const id = req.params.id
     let post = await PostModel.findOne({_id: req.params.id}) 
@@ -75,46 +72,45 @@ const updateComment = async (req: Request, res: Response, next: NextFunction) =>
             if(updatedComment !== null){
               res.status(203).send(updatedComment)
      } else {
-        next(createHttpError(404,`Comment with id ${commentId} not found!`))
+        res.status(404).send(`Comment with id ${commentId} not found`)
      }} else {
-        next(createHttpError(404,`Post with id ${req.params.id} not found!`))
+        res.status(404).send(`Comment with id ${req.params.id} not found`)
      }
  } catch (error) {
-    console.error(error)
-    next(error)
+    console.error(error) 
  }
 }
 
 // GET comment by ID
-const getCommentById = async(req: Request, res: Response, next: NextFunction) => {
+const getCommentById = async(req: Request, res: Response) => {
     try {
         const id = req.params.commentId
         const comment = await CommentModel.findById(id)
         .populate({ path: 'replies'})
         if (comment) {
-            res.status(200).send(comment)
+            res.send(comment)
         } else {
-            createHttpError(404,`Comment with id ${req.params.commentId} not found`)
+            res.status(404).send(`Comment with id ${id} not found`)
         }
     } catch (error) {
-        next(error)
+        console.error(error) 
     }
 }
 
 
 // DELETE comment
-const deleteComment = async (req: Request, res: Response, next: NextFunction) => {
+const deleteComment = async (req: Request, res: Response) => {
     try {
         const comment = await CommentModel.findByIdAndDelete(req.params.commentId)
         const post = await PostModel.findOneAndUpdate({_id: req.params.id},
             {$pull: {comments: comment?._id}})
         if (comment) {
-            res.send("deleted")
+            res.send('comment deleted')
         } else{
-            createHttpError(404,`Comment with id ${req.params.commentId} not found`)
+            res.status(404).send(`Comment with id ${req.params.commentId} not found`)
         }
     } catch (error) {
-        next(error)
+        console.error(error) 
     }
 }
 

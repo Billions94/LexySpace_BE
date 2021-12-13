@@ -43,6 +43,21 @@ const getAll = async (req: Request, res: Response) => {
 }
 
 
+// Get reply by ID
+const getById = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id
+        const reply = await ReplyModel.findById(id)
+        if(reply) {
+            res.send(reply)
+        } else {
+            res.status(404).send({message: `Reply with id ${id} not found`});
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 
 // Update or Edit reply
 const updateReply = async (req: Request, res: Response) => {
@@ -65,13 +80,30 @@ const updateReply = async (req: Request, res: Response) => {
      }
 }
 
+// Delete reply
+const deleteReply = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id
+        const deleted = await ReplyModel.findByIdAndDelete(id)
+        if(deleted) {
+            res.send('reply deleted')
+        } else {
+            res.status(404).send({message: `Reply with id ${id} not found`});
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 
 
 
 const replyHandler = {
     postReply,
     getAll,
-    updateReply
+    getById,
+    updateReply,
+    deleteReply
 }
 
 export default replyHandler

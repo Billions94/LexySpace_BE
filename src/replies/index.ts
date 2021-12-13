@@ -8,6 +8,8 @@ replyRouter.route('/')
 
 replyRouter.route('/:id')
 .post(replyHandler.postReply)
+.get(replyHandler.getById)
+.delete(replyHandler.deleteReply)
 
 replyRouter.route('/:id/:replyId')
 .put(replyHandler.updateReply)
