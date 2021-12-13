@@ -1,8 +1,9 @@
 import LoggedInUserSchema from './schema'
+import { Request, Response } from 'express'
 
 
 // Register/Create new User
-const createUser = async (req: any, res :any, next: any) => {
+const createUser = async (req: Request, res: Response) => {
    try {
        const user = new LoggedInUserSchema(req.body)
        await user.save()
@@ -17,7 +18,7 @@ const createUser = async (req: any, res :any, next: any) => {
 }
 
 // Get all Users
-const getAllUsers = async (req: any, res :any, next: any) => {
+const getAllUsers = async (req: Request, res: Response) => {
     try {
         const users = await LoggedInUserSchema.find()
         if(users) {
@@ -31,7 +32,7 @@ const getAllUsers = async (req: any, res :any, next: any) => {
 }
 
 // Get user by ID
-const getByID = async (req: any, res :any, next: any) => {
+const getByID = async (req: Request, res: Response) => {
     try {
         const userID = req.params.id
         const user = await LoggedInUserSchema.findById(userID)
@@ -46,7 +47,7 @@ const getByID = async (req: any, res :any, next: any) => {
 }
 
 // Update User by ID
-const updateUser = async (req: any, res :any, next: any) => {
+const updateUser = async (req: Request, res: Response) => {
     try {
         const userID = req.params.id
         const updatedUser = await LoggedInUserSchema.findByIdAndUpdate(userID, req.body, { new: true })
@@ -61,7 +62,7 @@ const updateUser = async (req: any, res :any, next: any) => {
 }
 
 // Delete User by ID
-const deleteUser = async (req: any, res :any, next: any) => {
+const deleteUser = async (req: Request, res: Response) => {
     try {
         const userID = req.params.id
         const deletedUser = await LoggedInUserSchema.findByIdAndDelete(userID)
