@@ -1,7 +1,7 @@
-import express from 'express';
+import express from 'express'
 import postHandler from './p-handler'
-import commentsHandler from '../comments/c-handler';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import commentsHandler from '../comments/c-handler'
+import { CloudinaryStorage } from 'multer-storage-cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 const multer = require('multer')
 

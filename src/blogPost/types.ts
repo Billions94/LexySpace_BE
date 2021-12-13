@@ -7,5 +7,9 @@ export interface Post {
     text: string;
     user: LoggedInUser;
     comments: Comments[];
-    
+    likes: any[]
+}
+
+interface Likes {
+    likes: any 
 }
