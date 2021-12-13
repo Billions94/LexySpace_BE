@@ -80,7 +80,7 @@ const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
         .sort(mongoQuery.options.sort)
         .populate({ path: 'user'})
         .populate({ path: 'comments'})
-        
+
 
         res.send({
             links: mongoQuery.links('/posts', total),
@@ -134,7 +134,7 @@ const deletePost = async (req: Request, res: Response, next: NextFunction) => {
         const id = req.params.id
         const deletedPost = await PostModel.findByIdAndDelete(id)
         if (deletedPost){
-            res.status(204).send(deletedPost)
+            res.send('blogPost deleted')
         } else {
             res.status(404).send({message: `User with id ${id} not found`});
         }

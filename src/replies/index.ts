@@ -9,4 +9,7 @@ replyRouter.route('/')
 replyRouter.route('/:id')
 .post(replyHandler.postReply)
 
+replyRouter.route('/:id/:replyId')
+.put(replyHandler.updateReply)
+
 export default replyRouter
