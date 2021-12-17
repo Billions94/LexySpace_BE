@@ -1,4 +1,5 @@
 export interface LoggedInUser {
+    _id?: string;
     name: string;
     lastName: string;
     userName: string;

@@ -3,9 +3,15 @@ import userHandler from './u-handler';
 
 const userRouter = express.Router();
 
+
+
+userRouter.post('/register', )
+
+
 userRouter.route('/')
 .get(userHandler.getAllUsers)
 .post(userHandler.createUser)
+
 
 
 userRouter.route('/:id')
