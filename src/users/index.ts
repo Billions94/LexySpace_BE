@@ -5,13 +5,11 @@ const userRouter = express.Router();
 
 
 
-userRouter.post('/register', )
+userRouter.post('/register', userHandler.createUser)
 
 
 userRouter.route('/')
 .get(userHandler.getAllUsers)
-.post(userHandler.createUser)
-
 
 
 userRouter.route('/:id')

@@ -1,17 +1,18 @@
 import mongoose from 'mongoose'
-import { LoggedInUser } from './types'
+import { RegisteredUsers } from './types'
 import bcrypt from 'bcrypt'
 
 
 const { Schema, model } = mongoose
 
-const UserSchema = new Schema<LoggedInUser>(
+const UserSchema = new Schema<RegisteredUsers>(
     {   
     name: { type: String },
     lastName: { type: String },
     userName: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    refreshToken: { type: String },
     bio: { type: String },
     image: { type: String },
     },
@@ -60,4 +61,4 @@ UserSchema.methods.toJSON = function () {
 // };
 
 
-export default model('User', UserSchema)
+export default model<RegisteredUsers>('User', UserSchema)

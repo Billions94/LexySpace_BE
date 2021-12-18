@@ -1,7 +1,9 @@
-import jwt from "jsonwebtoken";
-import { LoggedInUser } from "../users/types";
-import { Document } from "mongoose";
+import jwt from "jsonwebtoken"
+import { RegisteredUsers } from "../users/types"
+import UserModel from "../users/schema"
+import { Document } from "mongoose"
 
+process.env.TS_NODE_DEV && require("dotenv").config()
 
 const secret = process.env.JWT_SECRET!
 
@@ -9,13 +11,18 @@ type JWT = {
     _id: string;
 }
 
-export const tokenGenerator = async (user: LoggedInUser | Document) => {
-    const accessToken = await generateJWTToken({ _id: user._id });
+export const tokenGenerator = async (user: RegisteredUsers & Document) => {
+    const accessToken = await generateAccessToken({ _id: user._id })
+    const refreshToken = await generateRefreshToken({ _id: user._id })
 
-    return { accessToken };
+    user.refreshToken = refreshToken
+
+    await user.save()
+
+    return { accessToken, refreshToken };
 };
 
-const generateJWTToken = (payload: JWT) => {
+const generateAccessToken = (payload: JWT) => {
     return new Promise<string>((resolve, reject) => {
         jwt.sign(payload, secret, { expiresIn: "15m" }, (err, token) => {
             if (err) reject(err);
@@ -24,7 +31,16 @@ const generateJWTToken = (payload: JWT) => {
     });
 };
 
-export const verifyJWT = (token: string) => {
+const generateRefreshToken = (payload: JWT) => {
+    return new Promise<string>((resolve, reject) => {
+        jwt.sign(payload, secret, { expiresIn: "1 week" }, (err, token) => {
+            if(err) reject(err)
+            else resolve(token!)
+        })
+    })
+}
+
+export const verifyAccessToken = (token: string) => {
     return new Promise<JWT>((resolve, reject) => {
         jwt.verify(token, secret, (err, decodedToken) => {
             if (err) reject(err);
@@ -32,3 +48,28 @@ export const verifyJWT = (token: string) => {
         });
     });
 };
+
+export const verifyRefreshToken = (token: string) => {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, secret, (err, decodedToken) => {
+            if(err) reject(err)
+            else resolve(decodedToken)
+        })
+    })
+}
+
+export const refreshTokens = async (currentRefreshToken: string) => {
+
+    const decodedRefreshToken: any = await verifyRefreshToken(currentRefreshToken)
+
+    const user = await UserModel.findById(decodedRefreshToken._id)
+    if(!user) throw new Error('User not found')
+
+    if(user.refreshToken === currentRefreshToken) {
+        const { accessToken, refreshToken } = await tokenGenerator(user)
+        return { accessToken, refreshToken }
+    } else {
+        throw new Error('Token is invalid')
+    }
+
+}

@@ -1,14 +1,15 @@
 import createHttpError from "http-errors"
 import UserModel from "../users/schema"
-import { LoggedInUser } from "../users/types"
+import { RegisteredUsers } from "../users/types"
 import { RequestHandler } from "express"
-import { verifyJWT } from "./authTools"
+import { verifyAccessToken } from "./authTools"
+import { Document } from "mongoose"
 
 
 declare global {
     namespace Express {
         interface Request {
-            user?: LoggedInUser;
+            user?: RegisteredUsers & Document;
         }
     }
 }
@@ -20,7 +21,7 @@ export const tokenAuth: RequestHandler = async (req, res, next) => {
         try {
             const token = req.headers.authorization.replace("Bearer ", "")
 
-            const decodedToken  = await verifyJWT(token)
+            const decodedToken  = await verifyAccessToken(token)
 
             const user = await UserModel.findById(decodedToken._id)
             if(user) {
