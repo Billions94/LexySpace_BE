@@ -1,9 +1,13 @@
-import mongoose from 'mongoose'
+import mongoose, { Model } from 'mongoose'
 import { RegisteredUsers } from './types'
 import bcrypt from 'bcrypt'
 
 
 const { Schema, model } = mongoose
+
+interface UserModel extends Model<RegisteredUsers> {
+    verifyCredentials(email: string, password: string): Promise<RegisteredUsers & Document | null>;
+  }
 
 const UserSchema = new Schema<RegisteredUsers>(
     {   
@@ -44,21 +48,21 @@ UserSchema.methods.toJSON = function () {
     return userObject;
 };
 
-// UserSchema.statics.verifyCredentials = async function (email: string, plainPw: string) {
-//     const user = await this.findOne({ email });
+UserSchema.statics.verifyCredentials = async function (email: string, plainPw: string) {
+    const user = await this.findOne({ email });
 
-//     if (user) {
-//         const isMatch = await bcrypt.compare(plainPw, user.password);
-//         if (isMatch) {
-//             console.log("matched!!!!");
-//             return user;
-//         } else {
-//             return null;
-//         }
-//     } else {
-//         return null;
-//     }
-// };
+    if (user) {
+        const isMatch = await bcrypt.compare(plainPw, user.password);
+        if (isMatch) {
+            console.log("matched!!!!");
+            return user;
+        } else {
+            return null;
+        }
+    } else {
+        return null;
+    }
+};
 
 
-export default model<RegisteredUsers>('User', UserSchema)
+export default model<RegisteredUsers, UserModel>('User', UserSchema)

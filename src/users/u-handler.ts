@@ -1,6 +1,7 @@
 import UserModel from './schema'
 import { Request, RequestHandler, Response } from 'express'
-import { tokenGenerator } from '../auth/authTools'
+import { refreshTokens, tokenGenerator } from '../auth/authTools'
+import createHttpError from 'http-errors'
 
 
 // Register/Create new User
@@ -18,6 +19,52 @@ const createUser: RequestHandler = async (req, res) => {
     res.status(400).send(error);  
    }
 }
+
+// User Login
+const userLogin: RequestHandler = async (req, res, next) => {
+    try {
+        const { email, password } = req.body
+
+        const loggedInUser = await UserModel.verifyCredentials(email, password)
+        if(loggedInUser) {
+            const { accessToken, refreshToken } = await tokenGenerator(loggedInUser)
+            res.send({ accessToken, refreshToken })
+        } else {
+            next(createHttpError(401, "Credentials not ok!"));
+        }   
+    } catch (error) {
+        next(error)
+    }
+}
+
+// Refresh Token
+const refreshToken: RequestHandler = async (req, res, next) => {
+    try {
+      const { currentRefreshToken } = req.body;
+  
+      if (!currentRefreshToken) {
+        res.status(401).send({ message: "No refresh token provided!" });
+      } else {
+        const { accessToken, refreshToken } = await refreshTokens(
+            currentRefreshToken
+        );
+        res.send({ accessToken, refreshToken });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  // Logout
+//   const logout: RequestHandler = async (req, res, next) => {
+//     try {
+//       req.user?.refreshToken = null;
+//       await req.user?.save();
+//       res.send();
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
 
 // Get all Users
 const getAllUsers = async (req: Request, res: Response) => {
@@ -80,6 +127,8 @@ const deleteUser = async (req: Request, res: Response) => {
 
 const userHandler = {
     createUser,
+    userLogin,
+    refreshToken,
     getAllUsers,
     getByID,
     updateUser,
