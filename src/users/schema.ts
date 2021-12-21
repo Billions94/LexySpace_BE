@@ -1,7 +1,7 @@
 import mongoose, { Model } from 'mongoose'
 import { RegisteredUsers } from './types'
 import bcrypt from 'bcrypt'
-
+import { Document } from "mongoose"
 
 const { Schema, model } = mongoose
 
@@ -13,12 +13,13 @@ const UserSchema = new Schema<RegisteredUsers>(
     {   
     name: { type: String },
     lastName: { type: String },
-    userName: { type: String, required: true },
+    userName: { type: String },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: function(this: RegisteredUsers) { return !this.googleId }},
     refreshToken: { type: String },
     bio: { type: String },
     image: { type: String },
+    googleId: { type: String, required: function(this: RegisteredUsers) { return !this.password }}
     },
     {
         timestamps: true
@@ -44,6 +45,7 @@ UserSchema.methods.toJSON = function () {
     const userObject = userDoc.toObject();
     delete userObject.password;
     delete userObject.__v;
+    delete userObject.refreshToken
 
     return userObject;
 };

@@ -67,7 +67,7 @@ const refreshToken: RequestHandler = async (req, res, next) => {
 //   }
 
 // Get all Users
-const getAllUsers = async (req: Request, res: Response) => {
+const getAllUsers: RequestHandler = async (req, res) => {
     try {
         const users = await UserModel.find()
         if(users) {
@@ -81,7 +81,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 }
 
 // Get user by ID
-const getByID = async (req: Request, res: Response) => {
+const getByID: RequestHandler = async (req, res) => {
     try {
         const userID = req.params.id
         const user = await UserModel.findById(userID)
@@ -96,7 +96,7 @@ const getByID = async (req: Request, res: Response) => {
 }
 
 // Update User by ID
-const updateUser = async (req: Request, res: Response) => {
+const updateUser: RequestHandler = async (req, res) => {
     try {
         const userID = req.params.id
         const updatedUser = await UserModel.findByIdAndUpdate(userID, req.body, { new: true })
@@ -111,7 +111,7 @@ const updateUser = async (req: Request, res: Response) => {
 }
 
 // Delete User by ID
-const deleteUser = async (req: Request, res: Response) => {
+const deleteUser: RequestHandler = async (req, res) => {
     try {
         const userID = req.params.id
         const deletedUser = await UserModel.findByIdAndDelete(userID)

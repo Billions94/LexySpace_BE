@@ -1,11 +1,13 @@
-import express from 'express';
-import userHandler from './u-handler';
+import express from 'express'
+import userHandler from './u-handler'
+import { tokenAuth } from '../auth/tokenAuth';
 
 const userRouter = express.Router();
 
 
 
 userRouter.post('/register', userHandler.createUser)
+userRouter.post('/login', userHandler.userLogin)
 
 
 userRouter.route('/')
