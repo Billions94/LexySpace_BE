@@ -7,18 +7,6 @@ process.env.TS_NODE_DEV && require("dotenv").config()
 
 const { CLIENT_ID, CLIENT_SECRET, API_URL } = process.env
 
-interface Profile {
-    id: string;
-    name: {
-        givenName: string;
-        familyName: string;
-    }
-    emails: Emails[]
-}
-
-interface Emails {
-    value: string
-}
 
 const googleCloudStrategy = new GoogleStrategy({
     clientID: CLIENT_ID!,
