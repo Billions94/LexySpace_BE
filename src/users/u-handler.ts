@@ -1,5 +1,5 @@
 import UserModel from './schema'
-import { Request, RequestHandler, Response } from 'express'
+import { RequestHandler } from 'express'
 import { refreshTokens, tokenGenerator } from '../auth/authTools'
 import createHttpError from 'http-errors'
 
@@ -58,8 +58,8 @@ const refreshToken: RequestHandler = async (req, res, next) => {
   // Logout
 //   const logout: RequestHandler = async (req, res, next) => {
 //     try {
-//       req.user?.refreshToken = null;
-//       await req.user?.save();
+//       req.user!.refreshToken = null;
+//       await req.user!.save();
 //       res.send();
 //     } catch (error) {
 //       next(error);
@@ -83,7 +83,7 @@ const getAllUsers: RequestHandler = async (req, res) => {
 // Get user by ID
 const getByID: RequestHandler = async (req, res) => {
     try {
-        const userID = req.params.id
+        const userID = req.user?._id.toString();
         const user = await UserModel.findById(userID)
         if(user) {
             res.send(user)
@@ -98,7 +98,7 @@ const getByID: RequestHandler = async (req, res) => {
 // Update User by ID
 const updateUser: RequestHandler = async (req, res) => {
     try {
-        const userID = req.params.id
+        const userID = req.user?._id.toString();
         const updatedUser = await UserModel.findByIdAndUpdate(userID, req.body, { new: true })
         if(updatedUser) {
             res.status(203).send(updatedUser)
@@ -113,7 +113,7 @@ const updateUser: RequestHandler = async (req, res) => {
 // Delete User by ID
 const deleteUser: RequestHandler = async (req, res) => {
     try {
-        const userID = req.params.id
+        const userID = req.user?._id.toString();
         const deletedUser = await UserModel.findByIdAndDelete(userID)
         if(deletedUser) {
             res.send('user deleted')
@@ -129,6 +129,7 @@ const userHandler = {
     createUser,
     userLogin,
     refreshToken,
+    // logout,
     getAllUsers,
     getByID,
     updateUser,

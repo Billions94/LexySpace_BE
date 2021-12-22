@@ -5,7 +5,11 @@ export interface RegisteredUsers {
     userName: string;
     email: string;
     password: string;
-    refreshToken?: string;
+    tokens: {
+        accessToken: string;
+        refreshToken: string;
+    }
+    refreshToken: string | null;
     bio?: string;
     image?: string;
     googleId:string

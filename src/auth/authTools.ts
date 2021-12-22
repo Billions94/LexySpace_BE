@@ -5,6 +5,14 @@ import { Document } from "mongoose"
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
+declare global {
+    namespace Express {
+        interface Request {
+            user?: RegisteredUsers & Document;
+        }
+    }
+}
+
 const secret = process.env.JWT_SECRET!
 
 type JWT = {

@@ -1,18 +1,9 @@
 import createHttpError from "http-errors"
 import UserModel from "../users/schema"
-import { RegisteredUsers } from "../users/types"
 import { RequestHandler } from "express"
 import { verifyAccessToken } from "./authTools"
-import { Document } from "mongoose"
 
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: RegisteredUsers & Document;
-        }
-    }
-}
 
 export const tokenAuth: RequestHandler = async (req, res, next) => {
     if(!req.headers.authorization) {
