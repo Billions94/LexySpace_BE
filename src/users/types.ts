@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface RegisteredUsers {
     _id?: string;
     name?: string;
@@ -5,6 +7,7 @@ export interface RegisteredUsers {
     userName: string;
     email: string;
     password: string;
+    followers: Types.ObjectId[]
     tokens: {
         accessToken: string;
         refreshToken: string;

@@ -16,6 +16,7 @@ const UserSchema = new Schema<RegisteredUsers>(
     userName: { type: String },
     email: { type: String, required: true },
     password: { type: String, required: function(this: RegisteredUsers) { return !this.googleId }},
+    followers: [{type: Schema.Types.ObjectId, ref: 'User'}],
     refreshToken: { type: String },
     bio: { type: String },
     image: { type: String },
