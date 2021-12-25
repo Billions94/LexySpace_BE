@@ -13,7 +13,7 @@ const UserSchema = new Schema<RegisteredUsers>(
     {   
     firstName: { type: String },
     lastName: { type: String },
-    userName: { type: String, required: function (this:RegisteredUsers) { return !this.email}},
+    userName: { type: String, required: function (this: RegisteredUsers) { return !this.email}},
     email: { type: String, required: true },
     password: { type: String, required: function(this: RegisteredUsers) { return !this.googleId }},
     followers: [{type: Schema.Types.ObjectId, ref: 'User'}],
@@ -33,11 +33,9 @@ UserSchema.pre("save", async function (next) {
 
     const plainPw = newUser.password;
 
-    console.log("=======================> plain password before hash", plainPw);
     if (newUser.isModified("password")) {
         const hash = await bcrypt.hash(plainPw, 10);
         newUser.password = hash;
-        console.log("=======================> plain password after hash", hash);
     }
     next();
 });
