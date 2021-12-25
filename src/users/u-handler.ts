@@ -61,7 +61,7 @@ const addProfilePic: RequestHandler = async (req, res, next) => {
     try {
         const userId = req.params.id
         const imgPath = req.file!.path
-        const user = await UserModel.findByIdAndUpdate(userId, { $set: {image: imgPath}})
+        const user = await UserModel.findByIdAndUpdate(userId, { $set: {image: imgPath}}, {new: true})
         if(user) {
             res.status(203).send(user)
         } else {
