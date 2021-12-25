@@ -9,7 +9,7 @@ const postReply = async (req: Request, res: Response) => {
         const id = req.params.id
         
         const reply =  new ReplyModel(req.body)
-        reply.comments = id
+        reply.commentId = id
         await reply.save()
 
         console.log(reply)

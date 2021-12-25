@@ -2,12 +2,26 @@ import express from 'express'
 import userHandler from './u-handler'
 import { tokenAuth } from '../auth/tokenAuth'
 import passport from 'passport'
+import { CloudinaryStorage } from 'multer-storage-cloudinary'
+import { v2 as cloudinary } from 'cloudinary'
+import multer from  'multer'
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
 const { FE_URL } = process.env
 
 const userRouter = express.Router();
+interface params {
+    folder: string
+}
+
+// IMAGE CLOUD STORAGE
+const cloudinaryStorage = new CloudinaryStorage({
+    cloudinary, // CREDENTIALS,
+    params: <params>{
+      folder: "capstone",
+    },
+  });
 
 
 // AUTHENTICATED WITH JWT
@@ -15,11 +29,13 @@ userRouter.post('/register', userHandler.createUser)
 userRouter.post('/login', userHandler.userLogin)
 // userRouter.post('/logout', userHandler.logout)
 
+// ADD PHOTO TO PROFILE
+userRouter.put('/me/profilePic', multer({ storage: cloudinaryStorage}).single('image'), userHandler.addProfilePic)
+
 // GOOGLE LOGIN
 userRouter.get('/googleLogin', passport.authenticate('google', { scope: ["profile", "email"] }))
 userRouter.get('/googleRedirect', passport.authenticate('google'), async (req, res, next) => {
     try {
-        console.log('i am the request', req.user)
         res.redirect(`${FE_URL}?accessToken=${req.user?.tokens?.accessToken}&refreshToken=${req.user?.tokens?.refreshToken}`)
     } catch (error) {
         next(error)

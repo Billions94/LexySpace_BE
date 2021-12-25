@@ -56,6 +56,22 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     }
 }
 
+// Add Profile Picture
+const addProfilePic: RequestHandler = async (req, res, next) => {
+    try {
+        const userId = req.params.id
+        const imgPath = req.file!.path
+        const user = await UserModel.findByIdAndUpdate(userId, { $set: {image: imgPath}})
+        if(user) {
+            res.status(203).send(user)
+        } else {
+            next(createHttpError(404, `User with id ${userId} not found`))
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 // Follow Request
 const follow: RequestHandler = async (req, res, next) => {
@@ -149,28 +165,18 @@ const deleteUser: RequestHandler = async (req, res) => {
     }
 }
 
-// Logout
-//   const logout: RequestHandler = async (req, res, next) => {
-//     try {
-//       req.user!.refreshToken = null;
-//       await req.user!.save();
-//       res.send();
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
+
 
 const userHandler = {
     createUser,
     userLogin,
     refreshToken,
+    addProfilePic,
     follow,
     getAllUsers,
     getByID,
     updateUser,
     deleteUser
-    // logout,
-
 }
 
 export default userHandler

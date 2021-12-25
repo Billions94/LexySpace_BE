@@ -6,5 +6,5 @@ export interface Replies {
     _id?: string;
     text: string;
     user: RegisteredUsers;
-    comments: Comments[] | string
+    commentId: Comments | string
 }

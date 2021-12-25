@@ -1,11 +1,11 @@
 import PostModel from './schema'
 import UserModel from '../users/schema'
 import mongoose from 'mongoose'
-import { Request, Response, NextFunction } from 'express'
+import { RequestHandler } from 'express'
 const q2m = require('query-to-mongo')
 
 //Create new Post
-const createPost = async (req: Request, res: Response, next: NextFunction) => {
+const createPost: RequestHandler = async (req, res, next) => {
     try {
         const userName = req.params.userName
         const user = await UserModel.findOne({ userName: userName })
@@ -25,12 +25,16 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 // Post new Picture or Change existing one
-const postPicture = async (req: any, res: Response, next: NextFunction) => {
+const postPicture: RequestHandler = async (req, res, next) => {
     try {
-        const id = req.params.id
-        const imgPath = req.file.path
-        const user = await PostModel.findByIdAndUpdate(id, { $set: { image: imgPath }})
-        res.status(203).send(user)
+        const postId = req.params.id
+        const imgPath = req.file!.path
+        const post = await PostModel.findByIdAndUpdate(postId, { $set: { cover: imgPath }})
+        if(post) {
+            res.status(203).send(post)
+        } else {
+            res.status(404).send({message: "Cover could not be uploaded"});
+        }  
     } catch (error) {
         console.log(error)
         next(error);
@@ -38,7 +42,7 @@ const postPicture = async (req: any, res: Response, next: NextFunction) => {
 }
 
 // Post Likes
-const postLike = async (req: Request, res: Response, next: NextFunction) => {
+const postLike: RequestHandler = async (req, res, next) => {
     try {
         const id = req.params.id;
         console.log('==================>',id)
@@ -70,7 +74,7 @@ const postLike = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 // Get all Posts
-const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
+const getAllPosts: RequestHandler = async (req, res, next) => {
     try {
         const mongoQuery = q2m(req.query)
         const total = await PostModel.countDocuments(mongoQuery.criteria)
@@ -96,7 +100,7 @@ const getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 // Get specify Post by ID
-const getPostById = async (req: Request, res: Response, next: NextFunction) => {
+const getPostById: RequestHandler = async (req, res, next) => {
     try {
         const id = req.params.id
         const post = await PostModel.findById(id)
@@ -114,7 +118,7 @@ const getPostById = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 // Update or Modify Post by ID
-const updatePost = async (req: Request, res: Response, next: NextFunction) => {
+const updatePost: RequestHandler = async (req, res, next) => {
     try {
         const id = req.params.id
         const post = await PostModel.findByIdAndUpdate(id, req.body, {new: true})
@@ -130,7 +134,7 @@ const updatePost = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 // Delete Post by ID
-const deletePost = async (req: Request, res: Response, next: NextFunction) => {
+const deletePost: RequestHandler = async (req, res, next) => {
     try {
         const id = req.params.id
         const deletedPost = await PostModel.findByIdAndDelete(id)

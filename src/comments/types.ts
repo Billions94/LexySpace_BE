@@ -1,11 +1,11 @@
 import { Post } from "../blogPost/types";
 import { Replies } from "../replies/types";
-import { LoggedInUser } from "../users/types";
+import { RegisteredUsers } from "../users/types";
 
 export interface Comments {
     _id?: string;
     text: string;
-    user: LoggedInUser;
-    posts: Post[] | string;
+    user: RegisteredUsers;
+    postId: Post | string;
     replies: Replies[];
 }

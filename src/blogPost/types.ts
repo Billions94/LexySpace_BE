@@ -1,15 +1,13 @@
-import { LoggedInUser } from "../users/types";
-import { Comments } from "../comments/types";
-import { ObjectId } from "mongoose";
+import { RegisteredUsers } from "../users/types"
+import { Comments } from "../comments/types"
+import { Types } from "mongoose"
 
 export interface Post {
-    image: string;
+    cover: string;
+    title: string;
     text: string;
-    user: LoggedInUser;
+    user: RegisteredUsers;
     comments: Comments[];
-    likes: any[]
+    likes: Types.ObjectId[]
 }
 
-interface Likes {
-    likes: any 
-}

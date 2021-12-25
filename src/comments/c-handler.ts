@@ -1,16 +1,16 @@
 
 import CommentModel from './schema'
 import PostModel from '../blogPost/schema'
-import { Request, Response } from 'express'
+import { RequestHandler } from 'express'
 const q2m = require('query-to-mongo')
 
 // Create new Comment
-const createComment = async (req: Request, res: Response) => {
+const createComment: RequestHandler = async (req, res) => {
     try {
         const id = req.params.id
         
         const comment =  new CommentModel(req.body)
-        comment.posts = id
+        comment.postId = id
         await comment.save()
 
         console.log(comment)
@@ -30,7 +30,7 @@ const createComment = async (req: Request, res: Response) => {
 }
 
 // Get all Comments
-const getAllComments = async (req: Request, res: Response) => {
+const getAllComments: RequestHandler = async (req, res) => {
     try {
         const mongoQuery = q2m(req.query)
         console.log(mongoQuery)
@@ -40,7 +40,7 @@ const getAllComments = async (req: Request, res: Response) => {
         .limit(mongoQuery.options.limit)
         .skip(mongoQuery.options.skip)
         .sort(mongoQuery.options.sort)
-        .populate({ path: 'comments', select: 'text'})
+        .populate({ path: 'comments' })
         if(post){
             const comments = post.comments
 
@@ -59,7 +59,7 @@ const getAllComments = async (req: Request, res: Response) => {
 }
 
 // Update the Comment
-const updateComment = async (req: Request, res: Response) => {
+const updateComment: RequestHandler = async (req, res) => {
  try {
     //  const id = req.params.id
     let post = await PostModel.findOne({_id: req.params.id}) 
@@ -82,7 +82,7 @@ const updateComment = async (req: Request, res: Response) => {
 }
 
 // GET comment by ID
-const getCommentById = async(req: Request, res: Response) => {
+const getCommentById: RequestHandler = async(req, res) => {
     try {
         const id = req.params.commentId
         const comment = await CommentModel.findById(id)
@@ -99,7 +99,7 @@ const getCommentById = async(req: Request, res: Response) => {
 
 
 // DELETE comment
-const deleteComment = async (req: Request, res: Response) => {
+const deleteComment: RequestHandler = async (req, res) => {
     try {
         const comment = await CommentModel.findByIdAndDelete(req.params.commentId)
         const post = await PostModel.findOneAndUpdate({_id: req.params.id},

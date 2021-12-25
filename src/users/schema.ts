@@ -11,14 +11,15 @@ interface UserModel extends Model<RegisteredUsers> {
 
 const UserSchema = new Schema<RegisteredUsers>(
     {   
-    name: { type: String },
+    firstName: { type: String },
     lastName: { type: String },
-    userName: { type: String },
+    userName: { type: String, required: function (this:RegisteredUsers) { return !this.email}},
     email: { type: String, required: true },
     password: { type: String, required: function(this: RegisteredUsers) { return !this.googleId }},
     followers: [{type: Schema.Types.ObjectId, ref: 'User'}],
     refreshToken: { type: String },
     bio: { type: String },
+    location: { type: String },
     image: { type: String },
     googleId: { type: String, required: function(this: RegisteredUsers) { return !this.password }}
     },

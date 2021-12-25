@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export interface RegisteredUsers {
     _id?: string;
-    name?: string;
+    firstName?: string;
     lastName?: string;
     userName: string;
     email: string;
@@ -14,6 +14,7 @@ export interface RegisteredUsers {
     }
     refreshToken: string | null;
     bio?: string;
-    image?: string;
+    location?: string;
+    image?: string;  
     googleId:string
 }
