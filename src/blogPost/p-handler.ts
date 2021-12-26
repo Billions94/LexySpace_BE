@@ -9,7 +9,7 @@ const createPost: RequestHandler = async (req, res, next) => {
     try {
         const userName = req.params.userName
         const user = await UserModel.findOne({ userName: userName })
-        console.log('=============================>', user?._id)
+       
         const newPost = new PostModel(req.body)
         newPost.user = user?._id
         await newPost.save()
@@ -28,7 +28,9 @@ const createPost: RequestHandler = async (req, res, next) => {
 const postPicture: RequestHandler = async (req, res, next) => {
     try {
         const postId = req.params.id
+        console.log('----------------> i am the post id', postId)
         const imgPath = req.file!.path
+        console.log('----------------> i am the path', imgPath)
         const post = await PostModel.findByIdAndUpdate(postId, { $set: { cover: imgPath }})
         if(post) {
             res.status(203).send(post)
@@ -45,7 +47,7 @@ const postPicture: RequestHandler = async (req, res, next) => {
 const postLike: RequestHandler = async (req, res, next) => {
     try {
         const id = req.params.id;
-        console.log('==================>',id)
+        
         let post = await PostModel.findById(id);
         if (post) {
           const liked = await PostModel.findOne({

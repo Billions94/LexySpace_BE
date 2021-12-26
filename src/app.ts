@@ -9,8 +9,8 @@ import googleCloudStrategy from "./auth/googleAuth";
 
 
 const app = express();
-// MIDDLEWARES
 
+// MIDDLEWARES
 app.use(cors())
 passport.use('google', googleCloudStrategy)
 app.use(express.json())
