@@ -1,30 +1,19 @@
 import express from 'express'
 import postHandler from './p-handler'
 import commentsHandler from '../comments/c-handler'
-import { CloudinaryStorage } from 'multer-storage-cloudinary'
+import { CloudinaryStorage, Options } from 'multer-storage-cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 import multer from  'multer'
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
-const { CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_SECRET } = process.env
 
 const postRouter = express.Router()
-
-
-cloudinary.config({ 
-    cloud_name: CLOUD_NAME, 
-    api_key: CLOUDINARY_API_KEY,
-    api_secret: CLOUDINARY_SECRET
-});
-interface params {
-    folder: string
-}
 
 // IMAGE CLOUD STORAGE
 const cloudinaryStorage = new CloudinaryStorage({
     cloudinary, // CREDENTIALS,
-    params: <params>{
+    params: <Options['params']>{
       folder: "capstone",
     },
   });

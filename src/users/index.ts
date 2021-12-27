@@ -2,7 +2,7 @@ import express from 'express'
 import userHandler from './u-handler'
 import { tokenAuth } from '../auth/tokenAuth'
 import passport from 'passport'
-import { CloudinaryStorage } from 'multer-storage-cloudinary'
+import { CloudinaryStorage, Options } from 'multer-storage-cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 import multer from  'multer'
 
@@ -10,15 +10,12 @@ process.env.TS_NODE_DEV && require("dotenv").config()
 
 const { FE_URL } = process.env
 
-const userRouter = express.Router();
-interface params {
-    folder: string
-}
+const userRouter = express.Router()
 
 // IMAGE CLOUD STORAGE
 const cloudinaryStorage = new CloudinaryStorage({
     cloudinary, // CREDENTIALS,
-    params: <params>{
+    params: <Options['params']>{
       folder: "capstone",
     },
   });
@@ -27,6 +24,7 @@ const cloudinaryStorage = new CloudinaryStorage({
 // AUTHENTICATED WITH JWT
 userRouter.post('/register', userHandler.createUser)
 userRouter.post('/login', userHandler.userLogin)
+userRouter.post('/refreshToken', userHandler.refreshToken)
 // userRouter.post('/logout', userHandler.logout)
 
 // ADD PHOTO TO PROFILE
