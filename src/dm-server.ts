@@ -10,7 +10,7 @@ const httpServer = createServer(app)
 
 const io = new Server(httpServer)
 
-const onlineUsers: OnlineUser[] =[]
+export const onlineUsers: OnlineUser[] =[]
 
 io.on("connection", (socket) => {
     console.log(socket.id)
@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         console.log(`${socket.id} disconnected`)
+        // onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id)
     })
 })
 

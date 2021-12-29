@@ -8,13 +8,20 @@ import multer from  'multer'
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
-const { FE_URL } = process.env
+const { FE_URL, CLOUD_NAME, API_KEY, API_SECRET } = process.env
 
 const userRouter = express.Router()
 
+cloudinary.config({ 
+  cloud_name: CLOUD_NAME, 
+  api_key: API_KEY, 
+  api_secret: API_SECRET,
+  secure: true
+});
+
 // IMAGE CLOUD STORAGE
 const cloudinaryStorage = new CloudinaryStorage({
-    cloudinary, // CREDENTIALS,
+    cloudinary: cloudinary, // CREDENTIALS,
     params: <Options['params']>{
       folder: "capstone",
     },
@@ -28,7 +35,7 @@ userRouter.post('/refreshToken', userHandler.refreshToken)
 // userRouter.post('/logout', userHandler.logout)
 
 // ADD PHOTO TO PROFILE
-userRouter.put('/me/profilePic', multer({ storage: cloudinaryStorage}).single('image'), userHandler.addProfilePic)
+userRouter.put('/me/profilePic', tokenAuth, multer({ storage: cloudinaryStorage}).single('image'), userHandler.addProfilePic)
 
 // GOOGLE LOGIN
 userRouter.get('/googleLogin', passport.authenticate('google', { scope: ["profile", "email"] }))

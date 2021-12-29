@@ -59,7 +59,8 @@ const refreshToken: RequestHandler = async (req, res, next) => {
 // Add Profile Picture
 const addProfilePic: RequestHandler = async (req, res, next) => {
     try {
-        const userId = req.params.id
+        const userId = req.user?._id.toString();
+        console.log('--------------------> userId', userId)
         const imgPath = req.file!.path
         console.log('----------------> i am the path', imgPath)
         const user = await UserModel.findByIdAndUpdate(userId, { $set: {image: imgPath}}, {new: true})
@@ -125,6 +126,7 @@ const getAllUsers: RequestHandler = async (req, res) => {
 const getByID: RequestHandler = async (req, res) => {
     try {
         const userID = req.user?._id.toString();
+        console.log('---------------> userId', userID)
         const user = await UserModel.findById(userID)
         if (user) {
             res.send(user)
