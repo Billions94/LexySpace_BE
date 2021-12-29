@@ -1,4 +1,4 @@
-import { RegisteredUsers } from "../users/types"
+import { RegisteredUsers } from "../users/interfaces"
 import { Comments } from "../comments/types"
 import { Types } from "mongoose"
 

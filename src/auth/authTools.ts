@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { RegisteredUsers } from "../users/types"
+import { RegisteredUsers } from "../users/interfaces"
 import UserModel from "../users/schema"
 import { Document } from "mongoose"
 

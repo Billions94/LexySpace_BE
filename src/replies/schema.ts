@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Replies } from './types';
+import { Replies } from './interfaces';
 
 
 

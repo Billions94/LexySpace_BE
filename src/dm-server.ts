@@ -1,6 +1,7 @@
 import { createServer } from "http"
 import { Server } from "socket.io"
-import MessageModel from "./messages/schema"
+import RoomModel from "./messages/schema"
+import { OnlineUser } from "./messages/interfaces"
 import { app } from "./app"
 
 process.env.TS_NODE_DEV && require("dotenv").config()
@@ -9,11 +10,27 @@ const httpServer = createServer(app)
 
 const io = new Server(httpServer)
 
+const onlineUsers: OnlineUser[] =[]
+
 io.on("connection", (socket) => {
     console.log(socket.id)
 
-    socket.on("sendmessage", (message) => {
-        io.emit('sendmessage', message)
+    socket.on("setUsername", ({ userName, room }) => {
+        console.log({userName, room})
+        onlineUsers.push({ userName: userName, socketId: socket.id, room: room })
+
+        socket.join(room)
+        socket.emit("loggedin")
+        socket.to(room).emit("newConnection")
+    })
+
+    socket.on("sendmessage",  async ({ message, room }) => {
+
+        await RoomModel.findOneAndUpdate({ name: room },
+        {
+            $push: { chatHistory: message }
+        })
+        socket.to(room).emit("message", message)
     })
 
     socket.on("disconnect", () => {

@@ -8,4 +8,9 @@ const MessageSchema = new Schema({
     timestamp: { type: Date, default: Date.now() }
 })
 
-export default model('Message', MessageSchema)
+const RoomSchema = new Schema({
+    name: { type: String, required: true },
+    chatHistory: { type: [MessageSchema], required: true }
+})
+
+export default model('Room', RoomSchema)

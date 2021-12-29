@@ -1,5 +1,5 @@
 import mongoose, { Model } from 'mongoose'
-import { RegisteredUsers } from './types'
+import { RegisteredUsers } from './interfaces'
 import bcrypt from 'bcrypt'
 import { Document } from "mongoose"
 

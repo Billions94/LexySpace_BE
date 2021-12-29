@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Post } from './types';
+import { Post } from './interfaces';
 
 const { Schema, model } = mongoose
 

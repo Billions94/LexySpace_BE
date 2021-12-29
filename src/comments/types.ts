@@ -1,6 +1,6 @@
-import { Post } from "../blogPost/types";
-import { Replies } from "../replies/types";
-import { RegisteredUsers } from "../users/types";
+import { Post } from "../blogPost/interfaces";
+import { Replies } from "../replies/interfaces";
+import { RegisteredUsers } from "../users/interfaces";
 
 export interface Comments {
     _id?: string;
