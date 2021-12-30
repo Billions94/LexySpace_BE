@@ -28,9 +28,7 @@ const createPost: RequestHandler = async (req, res, next) => {
 const postPicture: RequestHandler = async (req, res, next) => {
     try {
         const postId = req.params.id
-        console.log('----------------> i am the post id', postId)
         const imgPath = req.file!.path
-        console.log('----------------> i am the path', imgPath)
         const post = await PostModel.findByIdAndUpdate(postId, { $set: { cover: imgPath }}, { new: true })
         if(post) {
             res.status(203).send(post)
@@ -53,9 +51,8 @@ const postLike: RequestHandler = async (req, res, next) => {
           const liked = await PostModel.findOne({
             _id: id,
             likes: new mongoose.Types.ObjectId(req.body.userId),
-          });
-          console.log('i am liked', liked)
-    
+          })
+
           if (!liked) {
            post =  await PostModel.findByIdAndUpdate(id, {
               $push: { likes: req.body.userId }
@@ -68,7 +65,7 @@ const postLike: RequestHandler = async (req, res, next) => {
         } else {
             res.status(404).send({message: `User with id ${id} not found`});
         }
-          
+    
         res.status(201).send(post);
       } catch (error) {
         next(error);
