@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express'
+import { ErrorRequestHandler } from 'express'
 
-export const badRequest = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const badRequest: ErrorRequestHandler = (err, req, res, next) => {
     if(err.status === 400){
         res.status(400).send({message: err.errorList})
     } else {
@@ -8,7 +8,7 @@ export const badRequest = (err: any, req: Request, res: Response, next: NextFunc
     } 
 }
 
-export const unAuthorized = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const unAuthorized: ErrorRequestHandler = (err, req, res, next) => {
     if(err.status === 401){
         res.status(401).send({message: 'Unathorized'})
     } else {
@@ -16,7 +16,7 @@ export const unAuthorized = (err: any, req: Request, res: Response, next: NextFu
     }
 }
 
-export const notFound = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const notFound: ErrorRequestHandler = (err, req, res, next) => {
     if(err.status === 404){
         res.status(404).send({message: err.errorList || 'Data not found!', success: false})
         console.log(err)
@@ -25,7 +25,7 @@ export const notFound = (err: any, req: Request, res: Response, next: NextFuncti
     }
 }
 
-export const genericError = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const genericError: ErrorRequestHandler = (err, req, res, next) => {
     if(err.status === 500){
         res.status(500).send({message: 'server error'})
     } else {
