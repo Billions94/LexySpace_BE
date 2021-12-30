@@ -31,7 +31,7 @@ const postPicture: RequestHandler = async (req, res, next) => {
         console.log('----------------> i am the post id', postId)
         const imgPath = req.file!.path
         console.log('----------------> i am the path', imgPath)
-        const post = await PostModel.findByIdAndUpdate(postId, { $set: { cover: imgPath }})
+        const post = await PostModel.findByIdAndUpdate(postId, { $set: { cover: imgPath }}, { new: true })
         if(post) {
             res.status(203).send(post)
         } else {

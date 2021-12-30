@@ -4,11 +4,21 @@ import commentsHandler from '../comments/c-handler'
 import { CloudinaryStorage, Options } from 'multer-storage-cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 import multer from  'multer'
+import { tokenAuth } from '../auth/tokenAuth'
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
+const { CLOUD_NAME, API_KEY, API_SECRET } = process.env
+
 
 const postRouter = express.Router()
+
+cloudinary.config({ 
+  cloud_name: CLOUD_NAME, 
+  api_key: API_KEY, 
+  api_secret: API_SECRET,
+  secure: true
+});
 
 // IMAGE CLOUD STORAGE
 const cloudinaryStorage = new CloudinaryStorage({
@@ -19,7 +29,7 @@ const cloudinaryStorage = new CloudinaryStorage({
   });
 
 // Post image
-postRouter.put('/:id/upload', multer({ storage: cloudinaryStorage}).single('cover'), postHandler.postPicture)  
+postRouter.put('/:id/upload', tokenAuth, multer({ storage: cloudinaryStorage}).single('cover'), postHandler.postPicture)  
  
 postRouter.post('/:userName', postHandler.createPost)
 postRouter.get('/', postHandler.getAllPosts)
