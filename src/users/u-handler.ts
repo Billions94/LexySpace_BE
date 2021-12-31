@@ -78,7 +78,7 @@ const addProfilePic: RequestHandler = async (req, res, next) => {
 // Follow Request
 const follow: RequestHandler = async (req, res, next) => {
     try {
-        const id = req.params.id;
+        const id = req.user?._id.toString();
         console.log('==================>', id)
         let followRequest = await UserModel.findById(id);
         if (followRequest) {

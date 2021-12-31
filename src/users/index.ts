@@ -60,6 +60,6 @@ userRouter.route('/:id')
 .delete(tokenAuth, userHandler.deleteUser)
 
 //********************************************Followers Section*************************************************/
-userRouter.post('/:id/follow', tokenAuth, userHandler.follow)
+userRouter.post('/me/follow', tokenAuth, userHandler.follow)
 
 export default userRouter

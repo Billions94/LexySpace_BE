@@ -15,23 +15,23 @@ export const onlineUsers: OnlineUser[] =[]
 io.on("connection", (socket) => {
     console.log(socket.id)
 
-    // socket.on("setUsername", ({ userName, room }) => {
-    //     console.log({userName, room})
-    //     onlineUsers.push({ userName: userName, socketId: socket.id, room: room })
+    socket.on("setUsername", ({ userName, room }) => {
+        console.log({userName, room})
+        onlineUsers.push({ userName: userName, socketId: socket.id, room: room })
 
-    //     socket.join(room)
-    //     socket.emit("loggedin")
-    //     socket.to(room).emit("newConnection")
-    // })
+        socket.join(room)
+        socket.emit("loggedin")
+        socket.to(room).emit("newConnection")
+    })
 
-    // socket.on("sendmessage",  async ({ message, room }) => {
+    socket.on("sendmessage",  async ({ message, room }) => {
 
-    //     await RoomModel.findOneAndUpdate({ name: room },
-    //     {
-    //         $push: { chatHistory: message }
-    //     })
-    //     socket.to(room).emit("message", message)
-    // })
+        await RoomModel.findOneAndUpdate({ name: room },
+        {
+            $push: { chatHistory: message }
+        })
+        socket.to(room).emit("message", message)
+    })
 
     socket.on("disconnect", () => {
         console.log(`${socket.id} disconnected`)
