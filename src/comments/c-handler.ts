@@ -35,15 +35,13 @@ const getAllComments: RequestHandler = async (req, res) => {
         const mongoQuery = q2m(req.query)
         console.log(mongoQuery)
         const total = await CommentModel.countDocuments(mongoQuery.criteria)
-        const post = await PostModel.findById(req.params.id)
+        const comments = await CommentModel.find()
 
         .limit(mongoQuery.options.limit)
         .skip(mongoQuery.options.skip)
         .sort(mongoQuery.options.sort)
-        .populate({ path: 'comments' })
-        if(post){
-            const comments = post.comments
-
+        .populate({ path: 'user' })
+        if(comments){
             res.send({
                 links: mongoQuery.links('/experience', total),
                 pageTotal: Math.ceil(total / mongoQuery.options.limit),

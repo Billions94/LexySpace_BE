@@ -35,8 +35,8 @@ userRouter.post('/refreshToken', userHandler.refreshToken)
 // userRouter.post('/logout', userHandler.logout)
 
 // ADD PHOTO TO PROFILE
-userRouter.put('/:id/profilePic', tokenAuth, multer({ storage: cloudinaryStorage}).single('image'), userHandler.addProfilePic)
 userRouter.put('/me/profilePic', tokenAuth, multer({ storage: cloudinaryStorage}).single('image'), userHandler.addProfilePic)
+userRouter.put('/:id/profilePic', tokenAuth, multer({ storage: cloudinaryStorage}).single('image'), userHandler.addUserPic)
 
 // GOOGLE LOGIN
 userRouter.get('/googleLogin', passport.authenticate('google', { scope: ["profile", "email"] }))
@@ -56,13 +56,14 @@ userRouter.route('/me')
 .delete(tokenAuth, userHandler.deleteUser)
 
 userRouter.route('/:id')
-.get(tokenAuth, userHandler.getByID)
-.put(tokenAuth, userHandler.updateUser)
+.get(tokenAuth, userHandler.getAnyUser)
+.put(tokenAuth, userHandler.updateAnyUser)
 .delete(tokenAuth, userHandler.deleteUser)
 
 //********************************************Followers Section*************************************************/
 userRouter.post('/me/follow', tokenAuth, userHandler.follow)
 userRouter.post('/:id/follow', tokenAuth, userHandler.followUsers)
 userRouter.get('/me/followers', tokenAuth, userHandler.getFollowers)
+userRouter.get('/:id/followers', tokenAuth, userHandler.getAllFollowers)
 
 export default userRouter

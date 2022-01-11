@@ -21,6 +21,7 @@ const UserSchema = new Schema<RegisteredUsers>(
     bio: { type: String },
     location: { type: String },
     image: { type: String },
+    isVerified: { type: Boolean, default: false, enum: ['true', 'false']},
     googleId: { type: String, required: function(this: RegisteredUsers) { return !this.password }}
     },
     {

@@ -7,6 +7,7 @@ import cors from "cors"
 import passport from "passport"
 import googleCloudStrategy from "./auth/googleAuth"
 import { onlineUsers } from "./dm-server"
+import commentsRouter from "./comments"
 
 
 const app = express();
@@ -25,6 +26,7 @@ app.get("/online-users", (req, res) => {
 // ENDPOINTS
 app.use('/users', userRouter)
 app.use('/posts', postRouter)
+app.use('/comments', commentsRouter)
 app.use('/replies', replyRouter)
 
 // ENDPOINTS TABLE

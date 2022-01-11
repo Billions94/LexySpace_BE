@@ -56,16 +56,26 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     }
 }
 
-// Add Profile Picture
+// Add Profile Picture 
 const addProfilePic: RequestHandler = async (req, res, next) => {
     try {
         const userId = req.user?._id.toString() 
-
-        const checker = userId ? userId : req.params.id
-        
         const imgPath = req.file!.path
-       
-        const user = await UserModel.findByIdAndUpdate(checker, { $set: {image: imgPath}}, {new: true})
+        const user = await UserModel.findByIdAndUpdate(userId, { $set: {image: imgPath}}, {new: true})
+        if(user) {
+            res.status(203).send(user)
+        } else {
+            next(createHttpError(404, `User with id ${userId} not found`))
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+const addUserPic: RequestHandler = async (req, res, next) => {
+    try {
+        const userId = req.params.id
+        const imgPath = req.file!.path
+        const user = await UserModel.findByIdAndUpdate(userId, { $set: {image: imgPath}}, {new: true})
         if(user) {
             res.status(203).send(user)
         } else {
@@ -157,6 +167,21 @@ const getFollowers: RequestHandler= async (req, res, next) => {
     }
 }
 
+const getAllFollowers: RequestHandler= async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const followers = await UserModel.findById(id)
+        .populate({ path: 'followers' })
+        if(followers) {
+            res.send(followers.followers)
+        } else {
+            next(createHttpError(404, `User with id ${id} not found`))
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
 // Get all Users
 const getAllUsers: RequestHandler = async (req, res) => {
     try {
@@ -175,10 +200,24 @@ const getAllUsers: RequestHandler = async (req, res) => {
 const getByID: RequestHandler = async (req, res) => {
     try {
         const userId = req.user?._id.toString()
-
-        const checker = userId ? userId : req.params.id
        
-        const user = await UserModel.findById(checker)
+        const user = await UserModel.findById(userId)
+        if (user) {
+            res.send(user)
+        } else {
+            res.status(404).send({ message: `User with id ${userId} not found` })
+        }
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}
+
+// Get any User
+const getAnyUser: RequestHandler = async (req, res) => {
+    try {
+        const userId = req.params.id
+       
+        const user = await UserModel.findById(userId)
         if (user) {
             res.send(user)
         } else {
@@ -236,16 +275,20 @@ const deleteUser: RequestHandler = async (req, res) => {
 
 
 
+
 const userHandler = {
     createUser,
     userLogin,
     refreshToken,
     addProfilePic,
+    addUserPic,
     follow,
     followUsers,
     getFollowers,
+    getAllFollowers,
     getAllUsers,
     getByID,
+    getAnyUser,
     updateUser,
     updateAnyUser,
     deleteUser

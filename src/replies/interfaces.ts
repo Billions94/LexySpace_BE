@@ -1,5 +1,5 @@
 import { RegisteredUsers } from "../users/interfaces";
-import { Comments } from "../comments/types";
+import { Comments } from "../comments/interfaces";
 
 
 export interface Replies {

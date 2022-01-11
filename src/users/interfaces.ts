@@ -15,6 +15,7 @@ export interface RegisteredUsers {
     refreshToken: string | null;
     bio?: string;
     location?: string;
-    image?: string;  
+    image?: string;
+    isVerified: boolean  
     googleId:string
 }

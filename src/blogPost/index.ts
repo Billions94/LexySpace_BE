@@ -29,7 +29,7 @@ const cloudinaryStorage = new CloudinaryStorage({
   });
 
 // Post image
-postRouter.put('/:id/upload', tokenAuth, multer({ storage: cloudinaryStorage}).single('cover'), postHandler.postPicture)  
+postRouter.put('/:id/upload', multer({ storage: cloudinaryStorage}).single('cover'), postHandler.postPicture)  
  
 postRouter.post('/:userName', postHandler.createPost)
 postRouter.get('/', postHandler.getAllPosts)

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Comments } from './types';
+import { Comments } from './interfaces';
 
 
 const { Schema, model } = mongoose

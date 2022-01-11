@@ -8,7 +8,7 @@ process.env.TS_NODE_DEV && require("dotenv").config()
 
 const httpServer = createServer(app)
 
-const io = new Server(httpServer)
+const io = new Server(httpServer, { cors: { origin: '*'}})
 
 export const onlineUsers: OnlineUser[] =[]
 
