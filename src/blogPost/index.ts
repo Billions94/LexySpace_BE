@@ -42,6 +42,7 @@ postRouter.route('/:id')
 /********************************************** Like Crud Section **********************************/
 postRouter.put('/:id/likes', postHandler.postLike)
 
+
 /********************************** Comments Crud Section  ************************************/
 postRouter.post('/:id/comments', commentsHandler.createComment)
 postRouter.get('/:id/comments', commentsHandler.getAllComments)

@@ -9,7 +9,11 @@ process.env.TS_NODE_DEV && require("dotenv").config()
 const httpServer = createServer(app)
 
 const io = new Server(httpServer, { cors: { origin: '*'}})
-
+// [{socketId, dbId}]
+// FE => dbId
+// message => db to store
+// target socketId from dbId
+// if (target socketId is online)emit incoming message to target socketId
 export const onlineUsers: OnlineUser[] =[]
 
 io.on("connection", (socket) => {
