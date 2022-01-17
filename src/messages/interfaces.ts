@@ -4,9 +4,11 @@ export interface Message {
     timestamp: Date
 }
 
-export type OnlineUser = {
+export interface OnlineUser  {
     userName: string
     socketId: string
-    room: string
+    room: Room
 }
+
+type Room = 'blue' | 'red'
 

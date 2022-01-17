@@ -32,6 +32,7 @@ const postReply = async (req: Request, res: Response) => {
 const getAll = async (req: Request, res: Response) => {
     try {
         const replies = await ReplyModel.find()
+        .populate({ path: 'user' })
         if(replies) {
             res.send(replies)
         } else {
@@ -48,6 +49,7 @@ const getById = async (req: Request, res: Response) => {
     try {
         const id = req.params.id
         const reply = await ReplyModel.findById(id)
+        .populate({ path: 'user' })
         if(reply) {
             res.send(reply)
         } else {

@@ -14,10 +14,11 @@ const io = new Server(httpServer, { cors: { origin: '*'}})
 // message => db to store
 // target socketId from dbId
 // if (target socketId is online)emit incoming message to target socketId
-export const onlineUsers: OnlineUser[] =[]
+export let onlineUsers: OnlineUser[] =[]
+
 
 io.on("connection", (socket) => {
-    console.log(socket.id)
+
 
     socket.on("setUsername", ({ userName, room }) => {
         console.log({userName, room})
@@ -34,12 +35,13 @@ io.on("connection", (socket) => {
         {
             $push: { chatHistory: message }
         })
-        socket.to(room).emit("message", message)
+        // socket.to(room).emit("message", message)
+        socket.broadcast.emit("message", message)
     })
 
     socket.on("disconnect", () => {
         console.log(`${socket.id} disconnected`)
-        // onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id)
+        onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id)
     })
 })
 

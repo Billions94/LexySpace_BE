@@ -9,8 +9,8 @@ export interface RegisteredUsers {
     password: string;
     followers: Types.ObjectId[]
     tokens: {
-        accessToken: string;
-        refreshToken: string;
+        accessToken: string | undefined;
+        refreshToken: string | undefined;
     }
     refreshToken: string | null;
     bio?: string;

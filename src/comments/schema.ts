@@ -9,6 +9,10 @@ const CommentSchema = new Schema<Comments>({
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     postId: { type: Schema.Types.ObjectId, ref: 'Post' },
     replies: [{ type: Schema.Types.ObjectId, ref: 'Reply' }]
-})
+},
+    {
+        timestamps: true
+    }
+)
 
 export default model('Comment', CommentSchema)
