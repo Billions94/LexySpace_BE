@@ -82,6 +82,7 @@ const getAllPosts: RequestHandler = async (req, res, next) => {
         .skip(mongoQuery.options.skip)
         .sort(mongoQuery.options.sort)
         .populate({ path: 'user'})
+        .populate({ path: 'sharedPost'})
         .populate({ path: 'comments'})
         .populate({ path: 'likes'})
 
