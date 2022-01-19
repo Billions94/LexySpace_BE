@@ -10,9 +10,9 @@ const createUser: RequestHandler = async (req, res) => {
     try {
         const newUser = new UserModel(req.body)
         if (newUser) {
+            const { accessToken, refreshToken } = await tokenGenerator(newUser)
             const { _id } = await newUser.save()
-            
-            res.status(201).send({ _id })
+            res.status(201).send({ _id, accessToken, refreshToken })
         } else {
             res.status(404).send({ message: "User could not be created" })
         }
