@@ -20,9 +20,9 @@ export let onlineUsers: OnlineUser[] =[]
 io.on("connection", (socket) => {
 
 
-    socket.on("setUsername", ({ userName, room }) => {
-        console.log({userName, room})
-        onlineUsers.push({ userName: userName, socketId: socket.id, room: room })
+    socket.on("setUsername", ({ userName, image, room }) => {
+        console.log({userName, image, room})
+        onlineUsers.push({ userName: userName, image: image, socketId: socket.id, room: room })
 
         socket.join(room)
         socket.emit("loggedin")
@@ -35,8 +35,8 @@ io.on("connection", (socket) => {
         {
             $push: { chatHistory: message }
         })
-        // socket.to(room).emit("message", message)
-        socket.broadcast.emit("message", message)
+        socket.to(room).emit("message", message)
+        // socket.broadcast.emit("message", message)
     })
 
     socket.on("disconnect", () => {

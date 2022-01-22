@@ -6,9 +6,10 @@ export interface Message {
 
 export interface OnlineUser  {
     userName: string
+    image: string
     socketId: string
     room: Room
 }
 
-type Room = 'blue' | 'red'
+type Room = 'blue'
 
