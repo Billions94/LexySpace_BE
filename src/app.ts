@@ -9,6 +9,7 @@ import googleCloudStrategy from "./auth/googleAuth"
 import { onlineUsers } from "./dm-server"
 import commentsRouter from "./comments"
 import messageRouter from "./messages"
+import coverRouter from "./cover"
 
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/posts', postRouter)
 app.use('/comments', commentsRouter)
 app.use('/replies', replyRouter)
 app.use('/messages', messageRouter)
+app.use('/covers', coverRouter)
 
 // ENDPOINTS TABLE
 console.table(listEndpoints(app))
