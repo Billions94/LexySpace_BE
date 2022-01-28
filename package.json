@@ -7,7 +7,7 @@
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
     "dev": "ts-node-dev ./src",
-    "start": "node ./src/index.ts"
+    "start": "node ./src/index"
   },
   "keywords": [],
   "author": "",
