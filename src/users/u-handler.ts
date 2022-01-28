@@ -3,6 +3,8 @@ import { RequestHandler } from 'express'
 import { refreshTokens, tokenGenerator } from '../auth/authTools'
 import createHttpError from 'http-errors'
 import mongoose from 'mongoose'
+const q2m = require('query-to-mongo')
+
 
 
 // Register/Create new User
@@ -38,7 +40,7 @@ const userLogin: RequestHandler = async (req, res, next) => {
     }
 }
 
-// Refresh Token
+// Refresh Token to enable users remained logged in after their token expires
 const refreshToken: RequestHandler = async (req, res, next) => {
     try {
         const { currentRefreshToken } = req.body
@@ -56,7 +58,7 @@ const refreshToken: RequestHandler = async (req, res, next) => {
     }
 }
 
-// Add Profile Picture 
+// Add Profile Picture / Users route
 const addProfilePic: RequestHandler = async (req, res, next) => {
     try {
         const userId = req.user?._id.toString() 
@@ -71,6 +73,8 @@ const addProfilePic: RequestHandler = async (req, res, next) => {
         next(error)
     }
 }
+
+// Add Profile Picture / Admin route
 const addUserPic: RequestHandler = async (req, res, next) => {
     try {
         const userId = req.params.id
@@ -151,7 +155,7 @@ const followUsers: RequestHandler = async (req, res, next) => {
     }
 }
 
-// Get all Followers
+// Get all Followers / User route
 const getFollowers: RequestHandler= async (req, res, next) => {
     try {
         const id = req.user?._id.toString()
@@ -167,6 +171,7 @@ const getFollowers: RequestHandler= async (req, res, next) => {
     }
 }
 
+// Get all Followers / Admin route
 const getAllFollowers: RequestHandler= async (req, res, next) => {
     try {
         const id = req.params.id
@@ -182,7 +187,7 @@ const getAllFollowers: RequestHandler= async (req, res, next) => {
     }
 }
 
-// Get all Users
+// Get all Users / Admin & Users route
 const getAllUsers: RequestHandler = async (req, res) => {
     try {
         const users = await UserModel.find()
@@ -196,7 +201,21 @@ const getAllUsers: RequestHandler = async (req, res) => {
     }
 }
 
-// Get user by ID
+// Query search for User 
+const searchUsers: RequestHandler = async (req, res) => {
+    try {
+        const query = req.query
+        const users = await UserModel.find()
+        if(query && query.name) {
+            const filteredUser = users.filter(user => user.firstName?.toLowerCase() === query.name)
+            res.send(filteredUser)
+        }
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}
+
+// Get user by ID / Users route
 const getByID: RequestHandler = async (req, res) => {
     try {
         const userId = req.user?._id.toString()
@@ -212,7 +231,7 @@ const getByID: RequestHandler = async (req, res) => {
     }
 }
 
-// Get any User
+// Get user by ID / Admin route 
 const getAnyUser: RequestHandler = async (req, res) => {
     try {
         const userId = req.params.id
@@ -228,7 +247,7 @@ const getAnyUser: RequestHandler = async (req, res) => {
     }
 }
 
-// Update personal User by ID
+// Update user by ID / Users route
 const updateUser: RequestHandler = async (req, res) => {
     try {
         const userID = req.user?._id.toString()
@@ -258,7 +277,7 @@ const updateAnyUser: RequestHandler = async (req, res) => {
     }
 }
 
-// Delete User by ID
+// Delete User by ID / Users route
 const deleteUser: RequestHandler = async (req, res) => {
     try {
         const userID = req.user?._id.toString()
@@ -285,6 +304,7 @@ const userHandler = {
     follow,
     followUsers,
     getFollowers,
+    searchUsers,
     getAllFollowers,
     getAllUsers,
     getByID,

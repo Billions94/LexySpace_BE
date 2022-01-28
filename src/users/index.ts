@@ -5,6 +5,7 @@ import passport from 'passport'
 import { CloudinaryStorage, Options } from 'multer-storage-cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 import multer from  'multer'
+import UserModel from './schema'
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
@@ -38,6 +39,23 @@ userRouter.post('/refreshToken', userHandler.refreshToken)
 userRouter.put('/me/profilePic', tokenAuth, multer({ storage: cloudinaryStorage}).single('image'), userHandler.addProfilePic)
 userRouter.put('/:id/profilePic', tokenAuth, multer({ storage: cloudinaryStorage}).single('image'), userHandler.addUserPic)
 
+// ADD COVER TO PROFILE MODAL
+userRouter.post('/me/cover', tokenAuth, multer({ storage: cloudinaryStorage }).single('cover'), async (req, res, next) => {
+  try {
+    const userId = req.user?._id.toString() 
+    const imgPath = req.file!.path
+    const newCover = await UserModel.findByIdAndUpdate(userId, { $set: {cover: imgPath}}, {new: true})
+      if (newCover) {
+          res.status(203).send(newCover)
+      } else {
+          res.status(404).send({ message: "Cover could not be uploaded" });
+      }
+  } catch (error) {
+      console.log(error)
+      next(error);
+  }
+})
+
 // GOOGLE LOGIN
 userRouter.get('/googleLogin', passport.authenticate('google', { scope: ["profile", "email"] }))
 userRouter.get('/googleRedirect', passport.authenticate('google'), async (req, res, next) => {
@@ -48,7 +66,8 @@ userRouter.get('/googleRedirect', passport.authenticate('google'), async (req, r
     }
 })
 userRouter.route('/')
-.get(tokenAuth, userHandler.getAllUsers)
+// .get(tokenAuth, userHandler.getAllUsers)
+.get(tokenAuth, userHandler.searchUsers)
 
 userRouter.route('/me')
 .get(tokenAuth, userHandler.getByID)

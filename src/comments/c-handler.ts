@@ -56,7 +56,7 @@ const getAllComments: RequestHandler = async (req, res) => {
     }
 }
 
-// Update the Comment
+// Update the Comment by ID
 const updateComment: RequestHandler = async (req, res) => {
  try {
     //  const id = req.params.id
@@ -79,7 +79,7 @@ const updateComment: RequestHandler = async (req, res) => {
  }
 }
 
-// GET comment by ID
+// Get comment by ID
 const getCommentById: RequestHandler = async(req, res) => {
     try {
         const id = req.params.commentId
@@ -96,7 +96,7 @@ const getCommentById: RequestHandler = async(req, res) => {
 }
 
 
-// DELETE comment
+// Delete comment
 const deleteComment: RequestHandler = async (req, res) => {
     try {
         const comment = await CommentModel.findByIdAndDelete(req.params.commentId)

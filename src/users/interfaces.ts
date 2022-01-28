@@ -16,6 +16,7 @@ export interface RegisteredUsers {
     bio?: string;
     location?: string;
     image?: string;
+    cover: string
     isVerified: boolean  
     googleId:string
 }
