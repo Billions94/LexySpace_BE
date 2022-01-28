@@ -22,6 +22,7 @@ app.use(passport.initialize())
 
 // SOCKET IO ENDPOINT
 app.get("/online-users", (req, res) => {
+    
     res.send({ onlineUsers: onlineUsers });
 })
 
