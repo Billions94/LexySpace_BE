@@ -41,6 +41,23 @@ const postPicture: RequestHandler = async (req, res, next) => {
     }
 }
 
+// Post new Video or Change existing one
+const postVideo: RequestHandler = async (req, res, next) => {
+    try {
+        const postId = req.params.id
+        const videoPath = req.file!.path
+        const video = await PostModel.findByIdAndUpdate(postId, { $set: { video: videoPath }}, { new: true })
+        if(video) {
+            res.status(203).send(video)
+        } else {
+            res.status(404).send({message: "Cover could not be uploaded"});
+        }  
+    } catch (error) {
+        console.log(error)
+        next(error);
+    }
+}
+
 // Post Likes
 const postLike: RequestHandler = async (req, res, next) => {
     try {
@@ -152,6 +169,7 @@ const deletePost: RequestHandler = async (req, res, next) => {
 const postHandler = {
     createPost,
     postPicture,
+    postVideo,
     postLike,
     getAllPosts,
     getPostById,

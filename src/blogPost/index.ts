@@ -22,14 +22,32 @@ cloudinary.config({
 
 // IMAGE CLOUD STORAGE
 const cloudinaryStorage = new CloudinaryStorage({
-    cloudinary, // CREDENTIALS,
+    cloudinary: cloudinary, // CREDENTIALS,
     params: <Options['params']>{
       folder: "capstone",
+      resource_type: "auto", 
     },
   });
 
-// Post image
-postRouter.put('/:id/upload', multer({ storage: cloudinaryStorage}).single('cover'), postHandler.postPicture)  
+  const videoUpload = multer({
+    storage: cloudinaryStorage,
+    limits: {
+    fileSize: 10000000 // 10000000 Bytes = 10 MB
+    },
+    fileFilter(req, file, cb) {
+      // upload only mp4 and mkv format
+      if (!file.originalname.match(/\.(mp4|MPEG-4|mkv)$/)) { 
+         return cb(new Error('Please upload a video'))
+      }
+      cb(null, true)
+   }
+})
+
+// Post Image
+postRouter.put('/:id/upload', multer({ storage: cloudinaryStorage }).single('cover'), postHandler.postPicture) 
+
+// Post Video
+postRouter.post('/:id/videoUpload', videoUpload.single('video'), postHandler.postVideo)
  
 postRouter.post('/:userName', postHandler.createPost)
 postRouter.get('/', postHandler.getAllPosts)
