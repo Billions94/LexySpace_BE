@@ -2,6 +2,7 @@ import PostModel from './schema'
 import UserModel from '../users/schema'
 import mongoose from 'mongoose'
 import { RequestHandler } from 'express'
+import { generatePostPDF } from './pdf/pdf'
 const q2m = require('query-to-mongo')
 
 //Create new Post
@@ -123,6 +124,8 @@ const getPostById: RequestHandler = async (req, res, next) => {
         const post = await PostModel.findById(id)
         .populate({ path: 'user'})
         .populate({ path: 'comments'})
+        .populate({ path: 'sharedPost'})
+        .populate({ path: 'likes'})
         if(post){
             res.send(post)
         } else {
@@ -130,6 +133,23 @@ const getPostById: RequestHandler = async (req, res, next) => {
         }
     } catch (error) {
         console.error(error)
+        next(error)
+    }
+}
+
+// Generate Post PDF by ID
+const getPDF: RequestHandler = async (req, res, next) => {
+    try {
+        const postId = req.params.id
+        const pdf = await PostModel.findById(postId)
+        if(pdf) {
+            const pdfStream = await generatePostPDF(pdf);
+            res.setHeader("Content-Type", "application/pdf");
+            pdfStream!.pipe(res);
+            pdfStream!.end();
+        } else throw new Error('Could not get PDF')
+    } catch (error) {
+        console.log(error)
         next(error)
     }
 }
@@ -172,6 +192,7 @@ const postHandler = {
     postVideo,
     postLike,
     getAllPosts,
+    getPDF,
     getPostById,
     updatePost,
     deletePost

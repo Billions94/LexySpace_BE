@@ -4,7 +4,7 @@ import commentsHandler from '../comments/c-handler'
 import { CloudinaryStorage, Options } from 'multer-storage-cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 import multer from  'multer'
-import { tokenAuth } from '../auth/tokenAuth'
+import { generatePostPDF } from './pdf/pdf'
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
@@ -32,7 +32,7 @@ const cloudinaryStorage = new CloudinaryStorage({
   const videoUpload = multer({
     storage: cloudinaryStorage,
     limits: {
-    fileSize: 10000000 // 10000000 Bytes = 10 MB
+    fileSize: 100000000 // 10000000 Bytes = 100 MB
     },
     fileFilter(req, file, cb) {
       // upload only mp4 and mkv format
@@ -47,7 +47,10 @@ const cloudinaryStorage = new CloudinaryStorage({
 postRouter.put('/:id/upload', multer({ storage: cloudinaryStorage }).single('cover'), postHandler.postPicture) 
 
 // Post Video
-postRouter.post('/:id/videoUpload', videoUpload.single('video'), postHandler.postVideo)
+postRouter.put('/:id/videoUpload', videoUpload.single('video'), postHandler.postVideo)
+
+// Download Post pdf
+postRouter.get('/:id/downloadPDF', postHandler.getPDF)
  
 postRouter.post('/:userName', postHandler.createPost)
 postRouter.get('/', postHandler.getAllPosts)
