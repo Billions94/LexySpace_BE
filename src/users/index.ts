@@ -9,7 +9,7 @@ import UserModel from './schema'
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
-const { FE_URL, CLOUD_NAME, API_KEY, API_SECRET } = process.env
+const { FE_URL, FE_LOCAL, CLOUD_NAME, API_KEY, API_SECRET } = process.env
 
 const userRouter = express.Router()
 
