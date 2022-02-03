@@ -26,9 +26,10 @@ async (accessToken, refreshToken, profile, passportNext) => {
             
         } else {
             const newUser = new UserModel({
-                firstName: profile?.name?.givenName,
-                lastName: profile?.name?.familyName || "",
+                firstName: profile!.name!.givenName,
+                lastName: profile!.name!.familyName || "",
                 email:  profile!.emails![0].value,
+                image: profile!.photos![0].value,
                 googleId: profile.id
             })
 

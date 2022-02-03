@@ -3,9 +3,9 @@ import { Comments } from "../comments/interfaces"
 import { Types } from "mongoose"
 
 export interface Post {
-    cover: string
+    // cover: string
     text: string
-    video: string
+    media: string
     sharedPost: Post
     user: RegisteredUsers
     comments: Comments[]

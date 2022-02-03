@@ -1,5 +1,6 @@
 export interface Message {
     text: string
+    image: string
     sender: string
     timestamp: Date
 }

@@ -30,11 +30,11 @@ const postPicture: RequestHandler = async (req, res, next) => {
     try {
         const postId = req.params.id
         const imgPath = req.file!.path
-        const post = await PostModel.findByIdAndUpdate(postId, { $set: { cover: imgPath }}, { new: true })
+        const post = await PostModel.findByIdAndUpdate(postId, { $set: { media: imgPath }}, { new: true })
         if(post) {
             res.status(203).send(post)
         } else {
-            res.status(404).send({message: "Cover could not be uploaded"});
+            res.status(404).send({message: "Media could not be uploaded"});
         }  
     } catch (error) {
         console.log(error)
@@ -47,11 +47,11 @@ const postVideo: RequestHandler = async (req, res, next) => {
     try {
         const postId = req.params.id
         const videoPath = req.file!.path
-        const video = await PostModel.findByIdAndUpdate(postId, { $set: { video: videoPath }}, { new: true })
+        const video = await PostModel.findByIdAndUpdate(postId, { $set: { media: videoPath }}, { new: true })
         if(video) {
             res.status(203).send(video)
         } else {
-            res.status(404).send({message: "Cover could not be uploaded"});
+            res.status(404).send({message: "Media could not be uploaded"});
         }  
     } catch (error) {
         console.log(error)

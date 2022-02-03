@@ -17,12 +17,12 @@ const printer = new PdfPrinter(fonts)
 
 export const generatePostPDF = async (post: Post) => {
 
-  if (!post.cover) return
+  if (!post.media) return
 
-  const response = await axios.get(post.cover, {
+  const response = await axios.get(post.media, {
     responseType: "arraybuffer",
   })
-  const postCoverURLParts = post.cover.split("/")
+  const postCoverURLParts = post.media.split("/")
   const fileName = postCoverURLParts[postCoverURLParts.length - 1]
   const [id, extension] = fileName.split(".")
   const base64 = response.data.toString("base64")

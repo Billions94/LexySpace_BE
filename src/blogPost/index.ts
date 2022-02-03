@@ -44,10 +44,10 @@ const cloudinaryStorage = new CloudinaryStorage({
 })
 
 // Post Image
-postRouter.put('/:id/upload', multer({ storage: cloudinaryStorage }).single('cover'), postHandler.postPicture) 
+postRouter.put('/:id/upload', multer({ storage: cloudinaryStorage }).single('media'), postHandler.postPicture) 
 
 // Post Video
-postRouter.put('/:id/videoUpload', videoUpload.single('video'), postHandler.postVideo)
+postRouter.put('/:id/upload', videoUpload.single('media'), postHandler.postVideo)
 
 // Download Post pdf
 postRouter.get('/:id/downloadPDF', postHandler.getPDF)
