@@ -60,7 +60,7 @@ userRouter.post('/me/cover', tokenAuth, multer({ storage: cloudinaryStorage }).s
 userRouter.get('/googleLogin', passport.authenticate('google', { scope: ["profile", "email"] }))
 userRouter.get('/googleRedirect', passport.authenticate('google'), async (req, res, next) => {
     try {
-        res.redirect(`${FE_URL}?accessToken=${req.user?.tokens?.accessToken}&refreshToken=${req.user?.tokens?.refreshToken}`)
+        res.redirect(`${FE_LOCAL}?accessToken=${req.user?.tokens?.accessToken}&refreshToken=${req.user?.tokens?.refreshToken}`)
     } catch (error) {
         next(error)
     }

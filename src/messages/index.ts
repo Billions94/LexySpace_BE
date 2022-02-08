@@ -4,8 +4,9 @@ import RoomModel from "./schema"
 const messageRouter = express.Router()
 
 messageRouter
-    .get("/:room", async (req, res) => {
-        const room = await RoomModel.findOne({ name: req.params.room })
+    .get("/:id", async (req, res) => {
+        const roomId = req.params.id
+        const room = await RoomModel.findById(roomId)
 
         if (!room) {
             return res.status(404).send("Room not found")

@@ -1,5 +1,5 @@
 import passport from "passport"
-import  { Strategy as GoogleStrategy } from "passport-google-oauth20"
+import { Strategy as GoogleStrategy } from "passport-google-oauth20"
 import UserModel from "../users/schema"
 import { tokenGenerator } from "./authTools"
 
@@ -13,35 +13,35 @@ const googleCloudStrategy = new GoogleStrategy({
     clientSecret: CLIENT_SECRET!,
     callbackURL: `${API_URL}/users/googleRedirect`
 },
-async (accessToken, refreshToken, profile, passportNext) => {
-    try {
-        // throw new Error("Random error test")
-        
-        console.log('===================>', profile)
-        const user = await UserModel.findOne({ googleId: profile.id })
+    async (accessToken, refreshToken, profile, passportNext) => {
+        try {
+            // throw new Error("Random error test")
 
-        if(user) {
-            const tokens = await tokenGenerator(user)
-            passportNext(null, { tokens })
-            
-        } else {
-            const newUser = new UserModel({
-                firstName: profile!.name!.givenName,
-                lastName: profile!.name!.familyName || "",
-                email:  profile!.emails![0].value,
-                image: profile!.photos![0].value,
-                googleId: profile.id
-            })
+            console.log('===================>', profile)
+            const user = await UserModel.findOne({ googleId: profile.id })
 
-            const savedUser = await newUser.save()
-            const tokens = await tokenGenerator(savedUser)
-            passportNext(null, { tokens })
+            if (user) {
+                const tokens = await tokenGenerator(user)
+                passportNext(null, { tokens })
+
+            } else {
+                const newUser = new UserModel({
+                    firstName: profile!.name!.givenName,
+                    lastName: profile!.name!.familyName || "",
+                    email: profile!.emails![0].value,
+                    image: profile!.photos![0].value,
+                    googleId: profile.id
+                })
+
+                const savedUser = await newUser.save()
+                const tokens = await tokenGenerator(savedUser)
+                passportNext(null, { tokens })
+            }
+        } catch (error: unknown) {
+            // console.log(error)
+            passportNext(error as Error)
         }
-    } catch (error: unknown) {
-        // console.log(error)
-        passportNext(error as Error)
-    }
-})
+    })
 
 passport.serializeUser(function (data, passportNext) {
     passportNext(null, data)

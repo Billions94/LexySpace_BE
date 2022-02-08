@@ -29,6 +29,22 @@ const createComment: RequestHandler = async (req, res) => {
     }
 }
 
+// Post Video/Photos as a comment
+const addMedia: RequestHandler = async (req, res) => {
+    try {
+        const mediaId = req.params.id
+        const mediaPath = req.file!.path
+        const newMedia = await CommentModel.findByIdAndUpdate(mediaId, { $set: { media: mediaPath }}, { new: true } )
+        if(newMedia) {
+            res.send(newMedia)
+        } else {
+            res.status(404).send(`Comment with id ${mediaId} not found`) 
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 // Get all Comments
 const getAllComments: RequestHandler = async (req, res) => {
     try {
@@ -114,6 +130,7 @@ const deleteComment: RequestHandler = async (req, res) => {
 
 const commentsHandler = {
     createComment,
+    addMedia,
     getAllComments,
     updateComment,
     getCommentById,

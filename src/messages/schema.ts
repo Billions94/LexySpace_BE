@@ -9,9 +9,11 @@ const MessageSchema = new Schema({
     timestamp: { type: Date, default: Date.now() }
 })
 
+
 const RoomSchema = new Schema({
     name: { type: String, required: true },
-    chatHistory: { type: [MessageSchema], required: true }
+    chatHistory: { type: [MessageSchema], required: true },
+    users: [{ type: Schema.Types.ObjectId, ref:'User' }]
 })
 
 export default model('Room', RoomSchema)

@@ -26,13 +26,14 @@ export const generatePostPDF = async (post: Post) => {
   const fileName = postCoverURLParts[postCoverURLParts.length - 1]
   const [id, extension] = fileName.split(".")
   const base64 = response.data.toString("base64")
-  const base64Image = `data:image/${extension}base64,${base64}`
+  const base64Image = `data:image/${extension};base64,${base64}`
   const imagePath = { image: base64Image, width: 500, margin: [0, 0, 0, 40] as [number, number, number, number] }
 
 
   const docDefinition: TDocumentDefinitions = {
     content: [
       imagePath,
+      // { image: 'https://picsum.photos/seed/picsum/200/300'},
       { text: striptags(post.text), lineHeight: 2 },
     ],
   }
