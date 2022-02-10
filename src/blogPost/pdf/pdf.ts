@@ -33,7 +33,7 @@ export const generatePostPDF = async (post: Post) => {
   const docDefinition: TDocumentDefinitions = {
     content: [
       imagePath,
-      // { image: 'https://picsum.photos/seed/picsum/200/300'},
+      { text: striptags(post.user!.firstName!), lineHeight: 2 },
       { text: striptags(post.text), lineHeight: 2 },
     ],
   }

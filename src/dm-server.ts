@@ -20,9 +20,9 @@ export let onlineUsers: OnlineUser[] =[]
 io.on("connection", (socket) => {
 
 
-    socket.on("setUsername", ({ userName, image, room }) => {
-        console.log({userName, image, room})
-        onlineUsers.push({ userName: userName, image: image, socketId: socket.id, room: room })
+    socket.on("setUsername", ({ _id, userName, image, room }) => {
+        console.log({_id, userName, image, room})
+        onlineUsers.push({ _id: _id, userName: userName, image: image, socketId: socket.id, room: room })
 
         socket.join(room)
         socket.emit("loggedin")
