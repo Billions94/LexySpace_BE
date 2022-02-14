@@ -1,20 +1,19 @@
 import mongoose from 'mongoose'
+import { Message } from './interfaces'
 
 const { Schema, model } = mongoose
 
-const MessageSchema = new Schema({
-    text: { type: String },
+export const MessageSchema = new Schema<Message>({
+    roomId: { type: String },
+    text: { type: String, required: true },
     image: { type: String },
     media: { type: String },
-    sender: { type: String },
-    timestamp: { type: Date, default: Date.now() }
+    sender: { type: String, required: true  },  
+},
+{
+    timestamps: true
 })
 
+export default model<Message>('Message', MessageSchema)
 
-const RoomSchema = new Schema({
-    name: { type: String, required: true },
-    chatHistory: { type: [MessageSchema], required: true },
-    users: [{ type: Schema.Types.ObjectId, ref:'User' }]
-})
 
-export default model('Room', RoomSchema)

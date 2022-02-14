@@ -16,32 +16,65 @@ const io = new Server(httpServer, { cors: { origin: '*'}})
 // if (target socketId is online)emit incoming message to target socketId
 export let onlineUsers: OnlineUser[] =[]
 
+const addUser = (_id: string, userName: string, image: string, socketId: string) => {
+    !onlineUsers.some(user => user._id === _id) && 
+    onlineUsers.push({ _id, userName, image, socketId })
+}
+
+const getUser = (_id: string) => {
+    return onlineUsers.find(user => user._id === _id)
+}
+
 
 io.on("connection", (socket) => {
 
 
-    socket.on("setUsername", ({ userName, image, room }) => {
-        console.log({ userName, image, room })
-        onlineUsers.push({ userName: userName, image: image, socketId: socket.id, room: room })
-
-        socket.join(room)
-        socket.emit("loggedin")
-        socket.to(room).emit("newConnection")
+    socket.on("setUsername", ({ userId, userName, image }) => {
+        console.log({ userName, image })
+        addUser(userId, userName, image, socket.id)
+        io.emit('getUsers', onlineUsers)
     })
 
-    socket.on("sendmessage",  async ({ message, room }) => {
 
-        await RoomModel.findOneAndUpdate({ name: room },
-        {
-            $push: { chatHistory: message }
+    socket.on('typing', (data) => {
+        io.emit("typing", {userName: data.userName})
+    })
+    
+
+    socket.on("sendmessage",  async ({ message }) => {
+
+        const user = getUser(message.receiver)
+        io.to(user!.socketId).emit('getMessage', {
+            sender: message.sender,
+            message
         })
-        socket.to(room).emit("message", message)
-        // socket.broadcast.emit("message", message)
+        console.log(user, message, message.sender)
+        // const conversation = await RoomModel.find({
+        // //     $and: [
+        // //       { members: { $in: [message.sender] } },
+        // //       { members: { $in: [message.receiver] } }
+        // //     ]
+        // // })
+
+        // // if(conversation) {
+        // //     conversation.findOne({})
+        // // }
+         
+
+        // // await RoomModel.findOneAndUpdate({ name: room },
+        // // {
+        // //     $push: { chatHistory: message }
+        // // })
+        // // socket.to(room).emit("message", message)
+        // // socket.broadcast.emit("message", message)
+        // console.log(message)
     })
+    
 
     socket.on("disconnect", () => {
         console.log(`${socket.id} disconnected`)
         onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id)
+        io.emit('getUsers', onlineUsers)
     })
 })
 

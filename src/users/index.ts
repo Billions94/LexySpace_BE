@@ -66,7 +66,7 @@ userRouter.get('/googleRedirect', passport.authenticate('google'), async (req, r
     }
 })
 userRouter.route('/')
-// .get(tokenAuth, userHandler.getAllUsers)
+.get(tokenAuth, userHandler.getAllUsers)
 .get(tokenAuth, userHandler.searchUsers)
 
 userRouter.route('/me')

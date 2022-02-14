@@ -1,4 +1,5 @@
 export interface Message {
+    roomId: string
     text: string
     image: string
     media: string
@@ -11,7 +12,6 @@ export interface OnlineUser  {
     userName: string
     image: string
     socketId: string
-    room: string
 }
 
 // type Room = 'string'

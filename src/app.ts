@@ -8,8 +8,9 @@ import passport from "passport"
 import googleCloudStrategy from "./auth/googleAuth"
 import { onlineUsers } from "./dm-server"
 import commentsRouter from "./comments"
-import messageRouter from "./messages"
+import roomRouter from "./messages/room"
 import coverRouter from "./cover"
+import messageRouter from "./messages"
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/users', userRouter)
 app.use('/posts', postRouter)
 app.use('/comments', commentsRouter)
 app.use('/replies', replyRouter)
+app.use('/rooms', roomRouter)
 app.use('/messages', messageRouter)
 app.use('/covers', coverRouter)
 

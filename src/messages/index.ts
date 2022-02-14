@@ -1,29 +1,51 @@
 import express from "express"
-import RoomModel from "./schema"
+import MessageModel from "./schema"
+import RoomModel from "./room/schema"
 
 const messageRouter = express.Router()
 
 messageRouter
-    .get("/", async (req, res) => {
+    .post("/:roomId", async (req, res) => {
         try {
-            const messages = await RoomModel.find()
-            if(messages) {
-                res.send(messages)
-            } else throw new Error("Couldn't get messages from the server")
+            const newMessage = new MessageModel(req.body)
+            newMessage.roomId = req.params.roomId
+            await newMessage.save()
+            if(newMessage) {
+                const updatedRoom = await RoomModel.findOneAndUpdate(
+                    {_id: req.params.roomId},
+                    { $push: { chatHistory: newMessage}}
+                    )
+                res.status(201).send(updatedRoom)
+            } else throw new Error("Message could not be created")
         } catch (error) {
             console.log(error)
         }
     })
-    // .get("/:id", async (req, res) => {
-    //     const roomId = req.params.id
-    //     const room = await RoomModel.findById(roomId)
 
-    //     if (!room) {
-    //         return res.status(404).send("Room not found")
-    //     } else {
-    //         return res.send(room)
-    //     }
-    // })
+    .post("/", async (req, res) => {
+        try {
+            const newMessage = new MessageModel(req.body)
+            await newMessage.save()
+            if(newMessage) {
+                res.status(201).send(newMessage)
+            } else throw new Error("Message could not be created")
+        } catch (error) {
+            console.log(error)
+        }
+    })
+
+    .get("/:roomId", async (req, res) => {
+        try {
+            const messages = await MessageModel.find({
+                roomId: req.params.roomId
+            })
+            if(messages) {
+                res.send(messages)
+            } else throw new Error("Something went wrong, could not get messages")
+        } catch (error) {
+            console.log(error)
+        }
+    })
 
 
 export default messageRouter
