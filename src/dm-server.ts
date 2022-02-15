@@ -3,6 +3,7 @@ import { Server } from "socket.io"
 import RoomModel from "./messages/schema"
 import { OnlineUser } from "./messages/interfaces"
 import { app } from "./app"
+import mongoose from "mongoose"
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
@@ -25,7 +26,6 @@ const getUser = (_id: string) => {
     return onlineUsers.find(user => user._id === _id)
 }
 
-
 io.on("connection", (socket) => {
 
 
@@ -37,37 +37,16 @@ io.on("connection", (socket) => {
 
 
     socket.on('typing', (data) => {
-        io.emit("typing", {userName: data.userName})
+        socket.broadcast.emit("typing", data.userName)
     })
     
 
     socket.on("sendmessage",  async ({ message }) => {
-
         const user = getUser(message.receiver)
-        io.to(user!.socketId).emit('getMessage', {
+        io.to(user!.socketId).emit('message', {
             sender: message.sender,
             message
         })
-        console.log(user, message, message.sender)
-        // const conversation = await RoomModel.find({
-        // //     $and: [
-        // //       { members: { $in: [message.sender] } },
-        // //       { members: { $in: [message.receiver] } }
-        // //     ]
-        // // })
-
-        // // if(conversation) {
-        // //     conversation.findOne({})
-        // // }
-         
-
-        // // await RoomModel.findOneAndUpdate({ name: room },
-        // // {
-        // //     $push: { chatHistory: message }
-        // // })
-        // // socket.to(room).emit("message", message)
-        // // socket.broadcast.emit("message", message)
-        // console.log(message)
     })
     
 
