@@ -28,7 +28,6 @@ const getUser = (_id: string) => {
 
 io.on("connection", (socket) => {
 
-
     socket.on("setUsername", ({ userId, userName, image }) => {
         console.log({ userName, image })
         addUser(userId, userName, image, socket.id)
@@ -36,10 +35,10 @@ io.on("connection", (socket) => {
     })
 
 
-    socket.on('typing', (data) => {
-        socket.broadcast.emit("typing", data.userName)
+    socket.on('typing', () => {
+        socket.broadcast.emit('typing')
     })
-    
+
 
     socket.on("sendmessage",  async ({ message }) => {
         const user = getUser(message.receiver)
@@ -47,6 +46,7 @@ io.on("connection", (socket) => {
             sender: message.sender,
             message
         })
+        console.log('message', message)
     })
     
 
@@ -58,11 +58,3 @@ io.on("connection", (socket) => {
 })
 
 export { httpServer }
-
-
-//1. Make an endpoint so you can find users without knowing their ids
-// 2. On the client get the ID of the receiver with the endpoint
-// 3. Send the message on socket to the BE with sender and receiver ID
-// 4. Look for their chatroom in the DB if there is one update it, if not make a new chatroom for them
-// 5. If the receiver is online on socket, forward the message/tell the receiver to fetch the messages because there is a new one, on socket.
-// 6. Inside the message if the sender's ID = the client's id display the message on the right, if not display it on the left
