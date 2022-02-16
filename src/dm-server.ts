@@ -1,9 +1,7 @@
 import { createServer } from "http"
 import { Server } from "socket.io"
-import RoomModel from "./messages/schema"
 import { OnlineUser } from "./messages/interfaces"
 import { app } from "./app"
-import mongoose from "mongoose"
 
 process.env.TS_NODE_DEV && require("dotenv").config()
 
