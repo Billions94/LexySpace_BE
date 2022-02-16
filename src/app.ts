@@ -9,7 +9,6 @@ import googleCloudStrategy from "./auth/googleAuth"
 import { onlineUsers } from "./dm-server"
 import commentsRouter from "./comments"
 import roomRouter from "./messages/room"
-import coverRouter from "./cover"
 import messageRouter from "./messages"
 
 
