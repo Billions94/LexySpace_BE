@@ -32,7 +32,7 @@ export const tokenGenerator = async (user: RegisteredUsers & Document) => {
 
 const generateAccessToken = (payload: JWT) => {
     return new Promise<string>((resolve, reject) => {
-        jwt.sign(payload, secret, { expiresIn: "15m" }, (err, token) => {
+        jwt.sign(payload, secret, { expiresIn: "1h" }, (err, token) => {
             if (err) reject(err);
             else resolve(token!);
         });
