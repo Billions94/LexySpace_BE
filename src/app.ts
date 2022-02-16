@@ -34,7 +34,7 @@ app.use('/comments', commentsRouter)
 app.use('/replies', replyRouter)
 app.use('/rooms', roomRouter)
 app.use('/messages', messageRouter)
-app.use('/covers', coverRouter)
+
 
 // ENDPOINTS TABLE
 console.table(listEndpoints(app))

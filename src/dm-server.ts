@@ -27,19 +27,19 @@ const getUser = (_id: string) => {
 }
 
 io.on("connection", (socket) => {
-
+    // New Connection Event
     socket.on("setUsername", ({ userId, userName, image }) => {
         console.log({ userName, image })
         addUser(userId, userName, image, socket.id)
         io.emit('getUsers', onlineUsers)
     })
 
-
+    // Typing Event
     socket.on('typing', () => {
         socket.broadcast.emit('typing')
     })
 
-
+    // Instant Message Event
     socket.on("sendmessage",  async ({ message }) => {
         const user = getUser(message.receiver)
         io.to(user!.socketId).emit('message', {
@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
         console.log('message', message)
     })
     
-
+    // Disconnect 
     socket.on("disconnect", () => {
         console.log(`${socket.id} disconnected`)
         onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id)
