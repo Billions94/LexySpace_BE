@@ -7,7 +7,7 @@ process.env.TS_NODE_DEV && require("dotenv").config()
 
 const httpServer = createServer(app)
 
-const io = new Server(httpServer, { cors: { origin: '*'}})
+const io = new Server(httpServer, { cors: { origin: '*:*'}})
 // [{socketId, dbId}]
 // FE => dbId
 // message => db to store
