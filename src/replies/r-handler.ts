@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, RequestHandler, Response } from 'express'
 import CommentModel from '../comments/schema'
 import ReplyModel from './schema'
 const q2m = require('query-to-mongo')
@@ -28,8 +28,24 @@ const postReply = async (req: Request, res: Response) => {
     }
 }
 
+// Post Video/Photos as a comment
+const addMedia: RequestHandler = async (req, res) => {
+    try {
+        const replyId = req.params.id
+        const mediaPath = req.file!.path
+        const newMedia = await ReplyModel.findByIdAndUpdate(replyId, { $set: { media: mediaPath }}, { new: true } )
+        if(newMedia) {
+            res.send(newMedia)
+        } else {
+            res.status(404).send(`Comment with id ${replyId} not found`) 
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 // Get all replies
-const getAll = async (req: Request, res: Response) => {
+const getAll: RequestHandler = async (req, res) => {
     try {
         const replies = await ReplyModel.find()
         .populate({ path: 'user' })
@@ -45,7 +61,7 @@ const getAll = async (req: Request, res: Response) => {
 
 
 // Get reply by ID
-const getById = async (req: Request, res: Response) => {
+const getById: RequestHandler = async (req, res) => {
     try {
         const id = req.params.id
         const reply = await ReplyModel.findById(id)
@@ -62,7 +78,7 @@ const getById = async (req: Request, res: Response) => {
 
 
 // Update or Edit reply
-const updateReply = async (req: Request, res: Response) => {
+const updateReply: RequestHandler = async (req, res) => {
     try {
         let comment = await CommentModel.findOne({_id: req.params.id}) 
         console.log(comment)
@@ -83,7 +99,7 @@ const updateReply = async (req: Request, res: Response) => {
 }
 
 // Delete reply
-const deleteReply = async (req: Request, res: Response) => {
+const deleteReply: RequestHandler = async (req, res) => {
     try {
         const id = req.params.id
         const deleted = await ReplyModel.findByIdAndDelete(id)
@@ -102,6 +118,7 @@ const deleteReply = async (req: Request, res: Response) => {
 
 const replyHandler = {
     postReply,
+    addMedia,
     getAll,
     getById,
     updateReply,
