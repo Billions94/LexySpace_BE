@@ -23,6 +23,20 @@ const cloudinaryStorage = new CloudinaryStorage({
         resource_type: "auto",
     },
 })
+// VIDEO CLOUD STORAGE
+const videoUpload = multer({
+    storage: cloudinaryStorage,
+    limits: {
+      fileSize: 100000000 // 10000000 Bytes = 100 MB
+    },
+    fileFilter(req, file, cb) {
+      // upload only mp4 and mkv format
+      if (!file.originalname.match(/\.(mp4|MPEG-4|mkv)$/)) {
+        return cb(new Error('Please upload a video'))
+      }
+      cb(null, true)
+    }
+  })
 
 
 
@@ -32,6 +46,9 @@ replyRouter.route('/')
     .get(replyHandler.getAll)
 
 replyRouter.put('/:id/upload', multer({ storage: cloudinaryStorage }).single('media'), replyHandler.addMedia)
+
+// Post Video
+replyRouter.put('/:id/upload', videoUpload.single('media'), replyHandler.addMedia)
 
 replyRouter.route('/:id')
     .post(replyHandler.postReply)
