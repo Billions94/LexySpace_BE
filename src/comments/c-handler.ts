@@ -32,13 +32,13 @@ const createComment: RequestHandler = async (req, res) => {
 // Post Video/Photos as a comment
 const addMedia: RequestHandler = async (req, res) => {
     try {
-        const mediaId = req.params.id
+        const commentId = req.params.id
         const mediaPath = req.file!.path
-        const newMedia = await CommentModel.findByIdAndUpdate(mediaId, { $set: { media: mediaPath }}, { new: true } )
+        const newMedia = await CommentModel.findByIdAndUpdate(commentId, { $set: { media: mediaPath }}, { new: true } )
         if(newMedia) {
             res.send(newMedia)
         } else {
-            res.status(404).send(`Comment with id ${mediaId} not found`) 
+            res.status(404).send(`Comment with id ${commentId} not found`) 
         }
     } catch (error) {
         console.error(error)
